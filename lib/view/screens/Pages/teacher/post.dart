@@ -3,15 +3,17 @@
 import 'dart:io';
 
 
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../constants.dart';
+
+import '../../widget/constants.dart';
 import '../../../../controller/service/post_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/post.dart';
-import '../../login.dart';
+import '../student/login.dart';
 
 
 class PostForm extends StatefulWidget {
@@ -97,9 +99,7 @@ class _PostFormState extends State<PostForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.title}'),
-      ),
+      
       body:_loading ? const Center(child: CircularProgressIndicator(),) :  ListView(
         children: [
           widget.post != null ? const SizedBox() :
@@ -112,13 +112,24 @@ class _PostFormState extends State<PostForm> {
                 fit: BoxFit.cover
               )
             ),
+            
             child: Center(
-              child: IconButton(
-                icon:const  Icon(Icons.image, size:50, color: Colors.black38),
-                onPressed: (){
-                  getImage();
-                },
-              ),
+              child:
+                  TextButton(
+                    style: ButtonStyle(shape:       
+                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.blue)
+                        )
+                      )
+                    ),
+                    onPressed: (){
+                      getImage();
+                    }, child: const Text('upload Image',style:TextStyle(fontSize: 15),),
+                  ),
+                 
+               
             ),
           ),
           Form(

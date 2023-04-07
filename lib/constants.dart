@@ -4,6 +4,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import 'view/screens/colors.dart';
+
 // sudo /opt/lampp/manager-linux-x64.run
 Widget buildPage(
     {required Color color,
@@ -34,17 +36,18 @@ Widget buildPage(
           height: 250,
         ),
         const SizedBox(height: 20),
-        Text(title, style: const TextStyle(fontSize: 20)),
+        Text(title, style: titlestyle),
         const SizedBox(height: 20),
         Container(
           padding:const  EdgeInsets.symmetric(vertical: 20),
-          child: Text(subtitle, style: const TextStyle(fontSize: 20)),
+          child: Text(subtitle, style: subtitlestyle),
         ),
       ],
     ),
   ) ]);
     
 }
+const appId="52e41f55a5d14274a6b80f1d982bf3b4";
 const baseURL = 'http://10.42.0.1:8000/api';
 const loginURL = '$baseURL/login';
 
@@ -52,15 +55,11 @@ const registerURL = '$baseURL/register';
 
 const logoutURL = '$baseURL/logout';
 const userURL = '$baseURL/user';
-const postsURL = '$baseURL/posts';
-const commentsURL = '$baseURL/comments';
-
-// ----- Errors -----
+const postsURL = '$baseURL/announcements';
+const commentsURL = '$baseURL/forum';
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
 const somethingWentWrong = 'Something went wrong, try again!';
-
-// --- input decoration
 InputDecoration kInputDecoration(String label) {
   return InputDecoration(
       labelText: label,
@@ -70,7 +69,6 @@ InputDecoration kInputDecoration(String label) {
           borderSide: const BorderSide(width: 1, color: Colors.black)));
 }
 
-// button
 
 TextButton kTextButton(String label, Function onPressed) {
   return TextButton(
@@ -87,7 +85,6 @@ TextButton kTextButton(String label, Function onPressed) {
   );
 }
 
-// loginRegisterHint
 Row kLoginRegisterHint(String text, String label, Function onTap) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,

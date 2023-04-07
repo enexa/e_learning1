@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 
-import '../colors.dart';
+import 'colors.dart';
 
 class CategoryBox extends StatelessWidget {
   const CategoryBox({ Key? key, required this.data, this.isSelected = false, this.onTap, this.selectedColor = actionColor}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:e_learning/constants.dart';
+import 'package:e_learning/view/screens/widget/constants.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,12 +10,12 @@ import '../../models/api_response.dart';
 import '../../models/user.dart';
 
 // login
-Future<ApiResponse> login(String email, String password) async {
+Future<ApiResponse> login(String email, String password,String department) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.post(Uri.parse(loginURL),
         headers: {'Accept': 'application/json'},
-        body: {'email': email, 'password': password});
+        body: {'email': email, 'password': password,'department':department});
 
     switch (response.statusCode) {
       case 200:
@@ -42,7 +42,7 @@ Future<ApiResponse> login(String email, String password) async {
 
 
 // Register
-Future<ApiResponse> register(String name, String email, String password) async {
+Future<ApiResponse> register(String name, String email, String password,String department) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.post(Uri.parse(registerURL), headers: {
@@ -50,8 +50,10 @@ Future<ApiResponse> register(String name, String email, String password) async {
     }, body: {
       'name': name,
       'email': email,
+      'department':department,
       'password': password,
-      'password_confirmation': password
+      'password_confirmation': password,
+      
     });
 
     switch (response.statusCode) {
@@ -64,6 +66,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
         break;
       default:
         apiResponse.error = somethingWentWrong;
+        
         break;
     }
   } catch (e) {
@@ -114,7 +117,7 @@ Future<ApiResponse> updateUser(String name, String? image) async {
                 'name': name,
               }
             : {'name': name, 'image': image});
-    // user can update his/her name or name and image
+    // user can update his/her name or name and profile
 
     switch (response.statusCode) {
       case 200:

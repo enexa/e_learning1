@@ -35,21 +35,45 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  flutter_native_splash: any
-  smooth_page_indicator: ^1.0.0+2
-  shared_preferences: ^2.0.15
-  get: ^4.6.5
-  font_awesome_flutter: ^10.3.0
-  curved_navigation_bar: ^1.0.3
-  youtube_player_flutter: ^8.1.2
-  http: ^0.13.5
-  image_picker: ^0.8.6
-  carousel_slider: ^4.2.1
-  flutter_svg: ^1.1.6
-  cached_network_image: ^3.2.3
-  badges: ^2.0.3
-  
+  cupertino_icons: 
+  flutter_native_splash: 
+  smooth_page_indicator: 
+  shared_preferences:
+  get: 
+  get_storage: 
+  font_awesome_flutter: 
+  curved_navigation_bar: 
+  youtube_player_flutter: 
+  http: 
+  image_picker: 
+  carousel_slider: 
+  flutter_svg: 
+  cached_network_image: 
+  badges: 
+  firebase_core: 
+  firebase_storage: 
+  flutter_native_timezone: 
+  google_fonts: 
+  date_picker_timeline: 
+  sqflite: 
+  flutter_staggered_animations: 
+  flutter_local_notifications: 
+  path_provider: 
+  dio: 
+  agora_uikit: 
+  agora_rtm: 
+  agora_rtc_engine: 
+  app_popup_menu: 
+  modal_bottom_sheet: 
+  circular_menu: 
+  permission_handler: 
+
+
+  gallery_saver:
+  flutter_localizations:
+    sdk: flutter
+  intl: 
+
   
 flutter_native_splash:
   background_image: "assets/splash.png"
@@ -92,17 +116,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+  - family: Julee
+    fonts:
+    - asset: assets/fonts/Julee-Regular.ttf
+  
+  - family: Quintessential
+    fonts:
+    - asset: assets/fonts/Quintessential-Regular.ttf
+        
+         
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

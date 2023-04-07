@@ -3,12 +3,14 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../constants.dart';
+
+import '../../widget/constants.dart';
 import '../../../../controller/service/comment_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/comment.dart';
-import '../../login.dart';
+import '../student/login.dart';
+
 
 class CommentScreen extends StatefulWidget {
   final int? postId;

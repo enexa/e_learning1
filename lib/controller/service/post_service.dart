@@ -5,7 +5,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../constants.dart';
+import '../../view/screens/widget/constants.dart';
 import '../../models/api_response.dart';
 
 import '../../models/post.dart';
@@ -24,7 +24,7 @@ Future<ApiResponse> getPosts() async {
 
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['posts'].map((p) => Post.fromJson(p)).toList();
+        apiResponse.data = jsonDecode(response.body)['announcements'].map((p) => Post.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
         apiResponse.data as List<dynamic>;
         break;
@@ -84,9 +84,6 @@ Future<ApiResponse> createPost(String body, String? image) async {
   return apiResponse;
 }
 
-
-
-// Edit post
 Future<ApiResponse> editPost(int postId, String body) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -121,7 +118,6 @@ Future<ApiResponse> editPost(int postId, String body) async {
 }
 
 
-// Delete post
 Future<ApiResponse> deletePost(int postId) async {
   ApiResponse apiResponse = ApiResponse();
   try {

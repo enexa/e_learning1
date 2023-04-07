@@ -3,13 +3,16 @@
 
 import 'package:e_learning/view/screens/Pages/teacher/post.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../../../constants.dart';
+
+
+import '../../widget/constants.dart';
 import '../../../../controller/service/post_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/post.dart';
-import '../../login.dart';
+import '../student/login.dart';
 import 'comment_screen.dart';
 
 class PostScreen extends StatefulWidget {
@@ -154,10 +157,11 @@ class _PostScreenState extends State<PostScreen> {
                       ],
                       onSelected: (val){
                         if(val == 'edit'){
-                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
-                             title: 'Edit Post',
-                             post: post,
-                           )));
+                          Get.to(PostForm(post: post,title:'Edit Post' ,));
+                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
+                          //    title: 'Edit Post',
+                          //    post: post,
+                          //  )));
                         } else {
                           _handleDeletePost(post.id ?? 0);
                         }
@@ -199,9 +203,10 @@ class _PostScreenState extends State<PostScreen> {
                       Icons.sms_outlined,
                       Colors.black54,
                       (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
-                          postId: post.id,
-                        )));
+                        Get.to(CommentScreen(postId: post.id));
+                        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                        //   postId: post.id,
+                        // )));
                       }
                     ),
                   ],

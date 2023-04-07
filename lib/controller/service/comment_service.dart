@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 
-import '../../constants.dart';
+import '../../view/screens/widget/constants.dart';
 import '../../models/api_response.dart';
 import '../../models/comment.dart';
 import 'use_service.dart';
