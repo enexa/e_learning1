@@ -54,6 +54,7 @@ const baseURL = 'http://10.42.0.1:8000/api';
 const loginURL = '$baseURL/login';
 const teacherloginURL = '$baseURL/teacher-login';
 const registerURL = '$baseURL/register';
+const pdfURL = '$baseURL/pdf';
 const changepasswordURL = '$baseURL/change-password';
 
 const logoutURL = '$baseURL/logout';
