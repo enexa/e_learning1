@@ -2,11 +2,13 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import '../../../../constants.dart';
+import 'package:get/get.dart';
+
 import '../../../../controller/service/post_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/post.dart';
+import '../../widget/constants.dart';
 import 'login.dart';
 
 class Blog extends StatefulWidget {
@@ -38,10 +40,16 @@ class _BlogState extends State<Blog> {
       });
     }
     else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
+      Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
 
@@ -63,7 +71,7 @@ class _BlogState extends State<Blog> {
       child: ListView.builder(
         itemCount: _postList.length,
         itemBuilder: (BuildContext context, int index){
-          Post post = _postList[index];
+          announcements post = _postList[index];
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
             child: Column(

@@ -18,7 +18,7 @@ class Notifypage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
        foregroundColor:Get.isDarkMode?Colors.white:darkgreyclr,
-          title:Text( this.label.toString().split("|")[0],style: headingstyle,),
+          title:Text( this.label.toString().split("|")[0],style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
           centerTitle: true,
           elevation: 0,
           leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back_ios_new , size: 20,

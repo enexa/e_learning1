@@ -18,8 +18,6 @@ class User {
  
   });
 
-
-  // function to convert json data to user model
   factory User.fromJson(Map<String, dynamic> json){
     return User(
       id: json['user']['id'],

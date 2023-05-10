@@ -7,7 +7,9 @@ import 'package:agora_uikit/agora_uikit.dart';
 import 'package:e_learning/models/user.dart';
 
 import 'package:flutter/material.dart';
-import 'package:e_learning/constants.dart';
+
+
+import '../../widget/constants.dart';
 
 class MyClass extends StatefulWidget {
 
@@ -57,6 +59,7 @@ class _MyClassState extends State<MyClass> {
           debugPrint("local user ${connection.localUid} joined");
           setState(() {
        
+            // ignore: non_constant_identifier_names, prefer_typing_uninitialized_variables
             var Uid;
             users.add(AgoraUser(uid:Uid));
           });

@@ -2,6 +2,7 @@
 
 import 'package:e_learning/controller/service/use_service.dart';
 import 'package:e_learning/view/screens/colors.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,19 +34,26 @@ class _Teacher_LoginState extends State<Teacher_Login> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController txtteacherEmail = TextEditingController();
   TextEditingController txtteacherPassword = TextEditingController();
-TextEditingController department  = TextEditingController();
   bool loading = false;
 
   void _loginUser() async {
-    ApiResponse response = await login(txtteacherEmail.text, txtteacherPassword.text,department.text);
+    ApiResponse response = await teacherlogin(txtteacherEmail.text, txtteacherPassword.text);
     if (response.error == null) {
       _saveAndRedirectToHome(response.data as User);
     } else {
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
+     Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
 
@@ -97,67 +105,30 @@ TextEditingController department  = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      
-        child: Hero(
-          tag: 'login',
-          child: Scaffold(
-           
-            body: Form(
-              key: formkey,
-              child: ListView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 100),
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: GestureDetector(
-                       
-                        
-                        
-                        child:Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: Teachearcolor,
-                                  width: 4,
-                                  style: BorderStyle.solid)),
-                          height: 200,
-                          width: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:  [
-                             const Icon(
-                                size: 70,
-                                FontAwesomeIcons.book,
-                                color: Colors.blue,
-                              ),
-                           const   SizedBox(height: 12,),
-                              Text('Teacher',style: titlestyle),
-                            ],
-                          ),
-                        ),
-                      ),),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              updatecolor(UserType.Student);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => const Login()),
-                                  (route) => false);
-                            });
-                          },
-                          child: Container(
+        
+         
+            
+            child: Scaffold(
+             
+              body: Form(
+                key: formkey,
+                child: ListView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 100),
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: GestureDetector(
+                         
+                          
+                          
+                          child:Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                    color: Studentcolor,
+                                    color: Teachearcolor,
                                     width: 4,
                                     style: BorderStyle.solid)),
                             height: 200,
@@ -165,63 +136,101 @@ TextEditingController department  = TextEditingController();
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:  [
-                              const  Icon(
+                               const Icon(
                                   size: 70,
-                                  FontAwesomeIcons.graduationCap,
+                                  FontAwesomeIcons.book,
                                   color: Colors.blue,
                                 ),
-                                 const   SizedBox(height: 12,),
-                                Text('Student',style: titlestyle,),
+                             const   SizedBox(height: 12,),
+                                Text('Teacher',style: newstyle),
                               ],
                             ),
                           ),
+                        ),),
+                        const SizedBox(
+                          width: 10,
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: txtteacherEmail,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                updatecolor(UserType.Student);
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => const Login()),
+                                    (route) => false);
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: Studentcolor,
+                                      width: 4,
+                                      style: BorderStyle.solid)),
+                              height: 200,
+                              width: 200,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children:  [
+                                const  Icon(
+                                    size: 70,
+                                    FontAwesomeIcons.graduationCap,
+                                    color: Colors.blue,
+                                  ),
+                                   const   SizedBox(height: 12,),
+                                  Text('Student',style: newstyle,),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: txtteacherEmail,
+                          validator: (val) =>
+                              val!.isEmpty ? 'Invalid email address' : null,
+                          decoration: kInputDecoration('Email')),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                        controller: txtteacherPassword,
+                        obscureText: true,
                         validator: (val) =>
-                            val!.isEmpty ? 'Invalid email address' : null,
-                        decoration: kInputDecoration('Email')),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      controller: txtteacherPassword,
-                      obscureText: true,
-                      validator: (val) =>
-                          val!.length < 6 ? 'Required at least 6 chars' : null,
-                      decoration: kInputDecoration('Password')),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  loading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : kTextButton('Login', () {
-                          if (formkey.currentState!.validate()) {
-                            setState(() {
-                              loading = true;
-                              _loginUser();
-                            });
-                          }
-                        }),
-                 const  SizedBox(
-                    height: 10,
-                  ),
-                 
-                ],
+                            val!.length < 6 ? 'Required at least 6 chars' : null,
+                        decoration: kInputDecoration('Password')),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    loading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : kTextButton('Login', () {
+                            if (formkey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                                _loginUser();
+                              });
+                            }
+                          }),
+                   const  SizedBox(
+                      height: 10,
+                    ),
+                   
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
-    
+       
+      
+      
     );
   }
 }

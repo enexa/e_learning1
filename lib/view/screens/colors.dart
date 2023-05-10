@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 const primary = Color(0xFFf77080);
 const secondary = Color(0xFFe96561);
@@ -62,56 +62,74 @@ class Themes{
   );
 }
 
-TextStyle get subheading{
+TextStyle  subheading(Color kcolor){
   return  TextStyle(
     fontFamily: 'Julee',
-      fontSize: 24,
+      fontSize: 22,
       fontWeight: FontWeight.bold,
-      color: Get.isDarkMode?Colors.grey[400]:Colors.grey,
+      color:kcolor
       
     );
   
 }
-TextStyle get headingstyle{
+TextStyle  headingstyle(Color kcolor){
   return TextStyle(
     fontFamily: 'Julee',
       fontSize: 25,
       fontWeight: FontWeight.bold,
-      color: Get.isDarkMode?Colors.white:Colors.black,
+     color:kcolor
     );
  
 }
-TextStyle get titlestyle{
+TextStyle  titlestyle(Color kcolor){
   return TextStyle(
+    
       fontFamily: 'Julee',
       fontSize: 16,
       fontWeight: FontWeight.w400,
-      color: Get.isDarkMode?Colors.white:Colors.black,
+      color:kcolor
+      
     );
  
 }
-TextStyle get subtitlestyle{
+TextStyle  subtitlestyle(Color kcolor){
   return TextStyle(
     fontFamily: 'Julee',
       fontSize: 14,
       fontWeight: FontWeight.w400,
-      color: Get.isDarkMode?Colors.grey[100]:Colors.grey[700],
+     color:kcolor
     );
   
 }
-
-class Themeservice{
-  final _box=GetStorage();
-  final _key='isDarkMode';
-  _saveTheme(bool isDarkMode)=>_box.write(_key, isDarkMode);
-  bool get _loadThemeFromBox=>_box.read(_key)??false;
+TextStyle get newstyle{
+  return TextStyle(
     
-  ThemeMode get theme=>_loadThemeFromBox?ThemeMode.dark:ThemeMode.light;
-  void  switchTheme(){
-    Get.changeThemeMode(_loadThemeFromBox?ThemeMode.light:ThemeMode.dark);
-_saveTheme(
-  !_loadThemeFromBox
-);
+      fontFamily: 'Julee',
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      color:kcolor
+      
+    );
+ 
+}
+class Themeservice {
+  final _box = GetStorage();
+  final _key = 'isDarkMode';
+
+  bool get isDarkMode => _box.read(_key) ?? false;
+
+  ThemeMode get themeMode => isDarkMode ? ThemeMode.dark : ThemeMode.light;
+
+  void switchTheme() {
+    Get.changeThemeMode(isDarkMode ? ThemeMode.light : ThemeMode.dark);
+    _box.write(_key, !isDarkMode);
   }
-  
+
+  void initTheme() {
+    if (!_box.hasData(_key)) {
+      _box.write(_key, false); // Set a default theme mode here
+      themeMode == ThemeMode.dark ? switchTheme() : null;
+     
+    }
+  }
 }

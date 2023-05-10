@@ -35,8 +35,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/second', page: () =>const Try()),
       ],
        theme: Themes.lightTheme,
+
       darkTheme: Themes.darkTheme,
-      themeMode: Themeservice().theme,
+      themeMode: Themeservice().themeMode,
       title: 'e-learning',
       debugShowCheckedModeBanner: false,
       home: const Onboarding(),

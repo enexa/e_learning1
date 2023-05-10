@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, use_build_context_synchronously, deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +31,7 @@ class _OnboardingState extends State<Onboarding> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: context.theme.backgroundColor,
         body: Container(
           padding: const EdgeInsets.only(bottom: 80),
           child: PageView(
@@ -39,22 +41,22 @@ class _OnboardingState extends State<Onboarding> {
             },
             children: [
               buildPage(
-                color: Colors.white,
+           
                 urlImage: 'assets/e3.png',
-                title: 'Welcome to e-learning',
-                subtitle: 'Learn anything you want',
+                title: 'Welcome to Bahir Dar University e-learning \n Arevolution in learning, the evolution of you',
+                subtitle: 'join us now',
               ),
               buildPage(
-                color: Colors.white,
+             
                 urlImage: 'assets/e1.png',
-                title: 'Learn from anywhere',
+                title: 'on-demand courses and bite-sized videos \n               to fit your schedule',
                 subtitle: 'Learn anything you want',
               ),
-              buildPage(
-                color: Colors.white,
+              buildPage(   
+             
                 urlImage: 'assets/e2.png',
-                title: 'Learn from anyone',
-                subtitle: 'Learn anything you want',
+                title: 'Discover the most in-demand skills',
+                subtitle: 'Start Now',
               ),
             ],
           ),

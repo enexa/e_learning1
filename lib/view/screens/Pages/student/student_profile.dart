@@ -6,12 +6,14 @@ import 'package:e_learning/models/api_response.dart';
 import 'package:e_learning/models/user.dart';
 import 'package:e_learning/controller/service/use_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 import 'package:image_picker/image_picker.dart';
 
 
-import '../../../../constants.dart';
+import '../../widget/constants.dart';
+import 'changepassword.dart';
 import 'login.dart';
 
 // ignore: camel_case_types
@@ -146,7 +148,12 @@ class _Student_ProfileState extends State<Student_Profile> {
                             });
                             updateProfile();
                           }
-                        })
+                        }),
+                        kTextButton('change password',(){
+    Get.to(const ChangePassword());
+                        }),
+                     
+                        
                       ],
                     ),
                   ),

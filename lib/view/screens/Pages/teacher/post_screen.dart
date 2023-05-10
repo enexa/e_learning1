@@ -44,9 +44,16 @@ class _PostScreenState extends State<PostScreen> {
       });
     }
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
+      Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
 
@@ -62,9 +69,16 @@ class _PostScreenState extends State<PostScreen> {
       });
     } 
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+     Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
 
@@ -83,9 +97,16 @@ class _PostScreenState extends State<PostScreen> {
       });
     } 
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+     Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
 
@@ -105,7 +126,7 @@ class _PostScreenState extends State<PostScreen> {
       child: ListView.builder(
         itemCount: _postList.length,
         itemBuilder: (BuildContext context, int index){
-          Post post = _postList[index];
+          announcements post = _postList[index];
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
             child: Column(

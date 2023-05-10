@@ -22,7 +22,7 @@ Future<bool> showExitPopup(context) async {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              const  Color.fromARGB(255, 10, 60, 101),
+                                Colors.blue
                         ),
                         child: const Text("Yes"),
                       ),

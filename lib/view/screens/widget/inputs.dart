@@ -25,12 +25,12 @@ class MyInputField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
     Text(title,
-    style: titlestyle,
+    style: titlestyle(Get.isDarkMode?Colors.white:Colors.black),
     ),
     Container(
 
       height: 45  ,
-      margin: const EdgeInsets.only(top: 3),
+     
       padding: const EdgeInsets.only(left: 14) ,
     
       decoration: BoxDecoration(
@@ -49,11 +49,11 @@ class MyInputField extends StatelessWidget {
             autofocus: false,
             cursorColor:Get.isDarkMode?Colors.grey[100]:Colors.grey[700],
             controller: controller,
-            style: subtitlestyle,
+            style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
             decoration: InputDecoration(
                 enabled: widget==null?true:false,
               hintText: hint,
-              hintStyle: subtitlestyle,
+              hintStyle: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.only(left: 20, ),
               focusedBorder: UnderlineInputBorder(

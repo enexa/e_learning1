@@ -5,6 +5,7 @@ import 'dart:io';
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 
@@ -17,7 +18,7 @@ import '../student/login.dart';
 
 
 class PostForm extends StatefulWidget {
-  final Post? post;
+  final announcements? post;
   final String? title;
 
   const PostForm({super.key, 
@@ -58,9 +59,16 @@ class _PostFormState extends State<PostForm> {
       });
     }
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+      Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
       setState(() {
         _loading = !_loading;
       });
@@ -79,9 +87,16 @@ class _PostFormState extends State<PostForm> {
       });
     }
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+      Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
       setState(() {
         _loading = !_loading;
       });

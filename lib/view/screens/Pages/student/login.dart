@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, use_build_context_synchronously, non_constant_identifier_names, library_private_types_in_public_api
+// ignore_for_file: constant_identifier_names, use_build_context_synchronously, non_constant_identifier_names, library_private_types_in_public_api, prefer_const_constructors
 
 
 import 'package:get/get.dart';
@@ -7,12 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../constants.dart';
+
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/user.dart';
 
 import '../../colors.dart';
+import '../../widget/constants.dart';
 import '../teacher/login_teacher.dart';
 import 'home.dart';
 import 'register.dart';
@@ -126,8 +127,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return SafeArea(
       
-        child: Hero(
-            tag: 'login',
+        
           child: Scaffold(
             body: Form(
               key: formkey,
@@ -166,7 +166,7 @@ class _LoginState extends State<Login> {
                                 color: Colors.blue,
                               ),
                               const  SizedBox(height: 12,),
-                              Text('Teacher',style: titlestyle,),
+                              Text('Teacher',style: newstyle,),
                             ],
                           ),
                         ),
@@ -199,7 +199,7 @@ class _LoginState extends State<Login> {
                                   color: Colors.blue,
                                 ),
                                const  SizedBox(height: 12,),
-                                Text('Student',style: titlestyle,),
+                                Text('Student',style: newstyle,),
                               ],
                             ),
                           ),
@@ -233,7 +233,7 @@ class _LoginState extends State<Login> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
                         border: Border.all(
-                            color: Colors.black,
+                            color: Active,
                            
                             style: BorderStyle.solid)),
                     child: DropdownButtonHideUnderline(
@@ -285,7 +285,7 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-        ),
+     
     
     );
   }
@@ -302,7 +302,6 @@ class _LoginState extends State<Login> {
     icon: const Icon(Icons.error,color: Colors.red,),);
   
   } else {
-  print('okay');
   }
   }}
  

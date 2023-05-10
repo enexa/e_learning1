@@ -56,7 +56,7 @@ class _MyStreamState extends State<MyStream> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text("Schedule Live stream ",style: headingstyle,)),
+                Center(child: Text("Schedule Live stream ",style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),)),
                 MyInputField(title: 'Title', hint: 'enter your title',controller: _titleController,),
                  MyInputField(title: 'note', hint: 'enter your note',controller: _noteController,),
                   MyInputField(title: 'Date', hint: DateFormat.yMd().format(_selectedDate),
@@ -78,7 +78,7 @@ class _MyStreamState extends State<MyStream> {
                     icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
                     iconSize: 32,
                     elevation: 4,
-                    style: subtitlestyle,
+                    style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
                     underline: Container(height: 0,),
 
                     items: remindList.map<DropdownMenuItem<String>>((int value){
@@ -97,7 +97,7 @@ class _MyStreamState extends State<MyStream> {
                     icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
                     iconSize: 32,
                     elevation: 4,
-                    style: subtitlestyle,
+                    style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
                     underline: Container(height: 0,),
 
                     items: repeatList.map<DropdownMenuItem<String>>((String ?value){
@@ -180,7 +180,7 @@ class _MyStreamState extends State<MyStream> {
     return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Color',style: titlestyle,),
+                              Text('Color',style: titlestyle(Get.isDarkMode?Colors.white:Colors.black),),
                               const SizedBox(height: 8.0,),
                               Wrap(
                                 children: 

@@ -2,13 +2,15 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, duplicate_ignore
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../../../constants.dart';
+
 
 import '../../../../controller/service/comment_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/comment.dart';
+import '../../widget/constants.dart';
 import 'login.dart';
 
 
@@ -49,10 +51,16 @@ class _ForumState extends State<Forum> {
       });
     }
     else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+     Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
     }
   }
   // create comment

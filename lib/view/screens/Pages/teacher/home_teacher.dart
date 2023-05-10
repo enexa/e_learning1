@@ -6,12 +6,13 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../constants.dart';
+
 import '../../../../controller/routes.dart';
 import '../../../../controller/service/use_service.dart';
 
 
 import '../../colors.dart';
+import '../../widget/constants.dart';
 import '../student/login.dart';
 
 
@@ -33,8 +34,7 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         
-        
-         backgroundColor: context.theme.backgroundColor,
+       
         appBar: AppBar(
             backgroundColor: context.theme.backgroundColor,
           leading: GestureDetector(
@@ -42,18 +42,18 @@ class _HomeState extends State<Home> {
             child: Icon(
             Get.isDarkMode?Icons.wb_sunny_outlined: Icons.nightlight_round,
              size: 20,
-              color:Get.isDarkMode?kcolor:kcoloricon,
+              color:Get.isDarkMode?Colors.white:Colors.black,
                   ),
           ),
-          title: const Text('Bahir Dar University'),
+          title:  Text('Bahir Dar University',style:headingstyle(Get.isDarkMode?Colors.white:Colors.black)),
           centerTitle: true,
-           foregroundColor:Get.isDarkMode?kcolor:kcoloricon,
+           foregroundColor:Get.isDarkMode?Get.isDarkMode?Colors.white:Colors.black:Get.isDarkMode?Colors.black:Colors.white,
           actions: [
           PopupMenuButton(
            itemBuilder: (context) => [
-             const PopupMenuItem(
+              PopupMenuItem(
                           value: 'Logout',
-                          child:  Text('Logout')
+                          child:  Text('Logout',style:subtitlestyle(Get.isDarkMode?Colors.white:Colors.black))
                         ),
            ],
             onSelected: (val){
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                       },
             child:  Padding(
                         padding: const EdgeInsets.only(right:10),
-                        child: Icon(Icons.more_vert, color:Get.isDarkMode?kcolor:kcoloricon,)
+                        child: Icon(Icons.more_vert, color:Get.isDarkMode?Colors.white:Colors.black,)
                       ),
           )
         ],
@@ -96,11 +96,11 @@ class _HomeState extends State<Home> {
               duration: const Duration(microseconds: 400), curve: Curves.ease);
         },
         height: 50.0,
-        items:  <Widget>[
-        Icon(Icons.home,size: 20,color:kcoloricon),
-        Icon(Icons.add_a_photo,size: 20,color:kcoloricon),
-        Icon(Icons.live_tv_rounded,size: 20,color:kcoloricon),
-         Icon(Icons.person,size: 20,color:kcoloricon),
+        items:  const <Widget>[
+        Icon(Icons.home,size: 20,color:blackclr),
+        Icon(Icons.add_a_photo,size: 20,color:blackclr),
+        Icon(Icons.live_tv_rounded,size: 20,color:blackclr),
+         Icon(Icons.person,size: 20,color:blackclr),
       
         
           // Icon(Icons.perm_identity, size: 20),

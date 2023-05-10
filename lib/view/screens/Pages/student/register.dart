@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:e_learning/models/api_response.dart';
 import 'package:e_learning/models/user.dart';
@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../constants.dart';
 
+
+import '../../widget/constants.dart';
 import 'home.dart';
 import 'login.dart';
 
@@ -83,10 +84,10 @@ class _RegisterState extends State<Register> {
         leading: GestureDetector(
           onTap: ()=>Get.to(const Login()),
           child: const Icon(Icons.arrow_back_ios_new)),
-          title:  Text('Bahir Dar University',style: headingstyle,),
+          title:  Text('Bahir Dar University',style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
           centerTitle: true,
         
-          foregroundColor: kcolor
+          foregroundColor: Get.isDarkMode?Colors.white:Colors.black
         ), 
         body: Form(
           key: formKey,
@@ -160,7 +161,6 @@ class _RegisterState extends State<Register> {
                   : kTextButton(
                       'Register',
                       () {
-                        print( departmentController.text );
                         if (formKey.currentState!.validate()) {
                           setState(() {
                             loading = !loading;

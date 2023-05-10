@@ -24,8 +24,7 @@ Future<ApiResponse> getPosts() async {
 
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['announcements'].map((p) => Post.fromJson(p)).toList();
-        // we get list of posts, so we need to map each item to post model
+        apiResponse.data = jsonDecode(response.body)['announcements'].map((p) => announcements.fromJson(p)).toList();
         apiResponse.data as List<dynamic>;
         break;
       case 401:
@@ -43,7 +42,6 @@ Future<ApiResponse> getPosts() async {
 }
 
 
-// Create post
 Future<ApiResponse> createPost(String body, String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -59,7 +57,6 @@ Future<ApiResponse> createPost(String body, String? image) async {
       'body': body
     });
 
-    // here if the image is null we just send the body, if not null we send the image too
 
     switch(response.statusCode){
       case 200:
@@ -150,7 +147,6 @@ Future<ApiResponse> deletePost(int postId) async {
 }
 
 
-// Like or unlike post
 Future<ApiResponse> likeUnlikePost(int postId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
