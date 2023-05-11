@@ -23,7 +23,7 @@ final List<Map<String, dynamic>> pageDetails = [
     'pageName': const Try(),
   },
   {
-    'pageName': const PdfListScreen(),
+    'pageName':  PdfListWidget(),
   },
   {
     'pageName': const Blog(),

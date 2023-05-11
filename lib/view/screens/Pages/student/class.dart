@@ -1,71 +1,123 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../controller/service/pdfservice.dart';
-import '../../../../models/pdffile.dart';
-import '../../widget/constants.dart';
+class PdfFile {
+  final String name;
+  final String path;
 
-class PdfListScreen extends StatefulWidget {
-  const PdfListScreen({Key? key}) : super(key: key);
-
-  @override
-  _PdfListScreenState createState() => _PdfListScreenState();
+  PdfFile({required this.name, required this.path});
 }
 
-class _PdfListScreenState extends State<PdfListScreen> {
-  late Future<List<PdfFile>> _pdfFiles;
-  
-  get apiUrl => null;
+class PdfListWidget extends StatefulWidget {
+  @override
+  _PdfListWidgetState createState() => _PdfListWidgetState();
+}
+
+class _PdfListWidgetState extends State<PdfListWidget> {
+  late List<String> _categories;
+  late List<String> _years;
+  late Map<String, List<List<PdfFile>>> _pdfFiles;
 
   @override
   void initState() {
     super.initState();
-    _pdfFiles = PdfService.getPdfFiles();
+    _categories = ['SW', 'IS', 'IT', 'CS'];
+    _years = ['1st', '2nd', '3rd', '4th'];
+    _pdfFiles = Map.fromIterable(
+      _categories,
+      key: (category) => category,
+      value: (category) => List.generate(
+        _years.length,
+        (index) => [],
+      ),
+    );
+    fetchPdfFiles();
+  }
+
+  Future<void> fetchPdfFiles() async {
+    final response = await http.get(Uri.parse('http://10.42.0.1:8000/api/pdf'));
+    final data = jsonDecode(response.body);
+    setState(() {
+      for (var key in data['files'].keys) {
+        final parts = key.split(' ');
+        final category = parts[0];
+        final year = parts[1];
+        final pdfFiles = data['files'][key].map<PdfFile>((path) {
+          return PdfFile(name: path.split('/').last, path: path);
+        }).toList();
+        _pdfFiles[category]![_years.indexOf(year)] = pdfFiles;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('PDF Files')),
-      body: FutureBuilder<List<PdfFile>>(
-        future: _pdfFiles,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final files = snapshot.data!;
-            final categories = {'SW', 'IS', 'IT', 'CS'};
-            final years = {'1st', '2nd', '3rd', '4th'};
-            return ListView.builder(
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories.elementAt(index);
-                final categoryFiles = files.where((file) => file.category == category).toList();
-                return ExpansionTile(
+      appBar: AppBar(
+        title: Text('PDF Files'),
+      ),
+      body: SingleChildScrollView(
+        child: ExpansionPanelList(
+          expansionCallback: (index, isExpanded) {
+            setState(() {
+              _categories[index] = isExpanded ? _categories[index] : '';
+            });
+          },
+          children: _categories.map((category) {
+            final index = _categories.indexOf(category);
+            final pdfFiles = _pdfFiles[category]!;
+            return ExpansionPanel(
+              isExpanded: category.isNotEmpty,
+              headerBuilder: (_, __) {
+                return ListTile(
                   title: Text(category),
-                  children: years.map((year) {
-                    final yearFiles = categoryFiles.where((file) => file.year == year).toList();
-                    return yearFiles.isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: yearFiles.map((file) {
-                              final pdfUrl = '$pdfURL/${file.category}/${file.year}/${file.name}';
-                              return ListTile(
-                                title: Text(file.name),
-                                onTap: () {
-                                  // TODO: Open the PDF file in a WebView or PDF viewer
-                                },
-                              );
-                            }).toList(),
-                          )
-                        : const SizedBox();
-}).toList(),
+                );
+              },
+              body: Column(
+                children: _years.map((year) {
+                  final index = _years.indexOf(year);
+                  final pdfFilesForYear = pdfFiles[index];
+                  if (pdfFilesForYear.isEmpty || pdfFilesForYear[0].name.isEmpty) {
+                    return SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(year),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: pdfFilesForYear.length,
+                        itemBuilder: (context, index) {
+                          final pdfFile = pdfFilesForYear[index];
+                          return ListTile(
+                            title: Text(pdfFile.name),
+                            onTap: () async {
+                              final url = 'http://10.42.0.1:8000/api/${pdfFile.path}';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Could not open the file'),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            );
+            }).toList(),
+    ),
+  ),
 );
-},
-);
-} else if (snapshot.hasError) {
-return Center(child: Text(snapshot.error.toString()));
-}
-return const Center(child: CircularProgressIndicator());
-},
-),
-);
-}
-}
+  }}
