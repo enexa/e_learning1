@@ -180,7 +180,7 @@ class _PostScreenState extends State<PostScreen> {
                         if(val == 'edit'){
                           Get.to(PostForm(post: post,title:'Edit Post' ,));
                           //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
-                          //    title: 'Edit Post',
+                          //    title: 'Edsit Post',
                           //    post: post,
                           //  )));
                         } else {
@@ -204,34 +204,34 @@ class _PostScreenState extends State<PostScreen> {
                     )
                   ),
                 ) : SizedBox(height: post.image != null ? 0 : 10,),
-                Row(
-                  children: [
-                    kLikeAndComment(
-                      post.likesCount ?? 0,
-                      post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
-                      post.selfLiked == true ? Colors.red : Colors.black54,
-                      (){
-                        _handlePostLikeDislike(post.id ?? 0);
-                      }
-                    ),
-                    Container(
-                      height: 25,
-                      width: 0.5,
-                      color: Colors.black38,
-                    ),
-                    kLikeAndComment(
-                      post.commentsCount ?? 0,
-                      Icons.sms_outlined,
-                      Colors.black54,
-                      (){
-                        Get.to(CommentScreen(postId: post.id));
-                        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
-                        //   postId: post.id,
-                        // )));
-                      }
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     kLikeAndComment(
+                //       post.likesCount ?? 0,
+                //       post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
+                //       post.selfLiked == true ? Colors.red : Colors.black54,
+                //       (){
+                //         _handlePostLikeDislike(post.id ?? 0);
+                //       }
+                //     ),
+                //     Container(
+                //       height: 25,
+                //       width: 0.5,
+                //       color: Colors.black38,
+                //     ),
+                //     kLikeAndComment(
+                //       post.commentsCount ?? 0,
+                //       Icons.sms_outlined,
+                //       Colors.black54,
+                //       (){
+                //         Get.to(CommentScreen(postId: post.id));
+                //         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                //         //   postId: post.id,
+                //         // )));
+                //       }
+                //     ),
+                //   ],
+                // ),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 0.5,

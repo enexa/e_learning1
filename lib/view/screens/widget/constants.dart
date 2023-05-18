@@ -61,6 +61,7 @@ const logoutURL = '$baseURL/logout';
 const userURL = '$baseURL/user';
 const postsURL = '$baseURL/announcements';
 const commentsURL = '$baseURL/forum';
+const forumsURL = '$baseURL/forums';
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
 const somethingWentWrong = 'Something went wrong, try again!';

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 
+import 'package:e_learning/view/screens/Pages/teacher/passwordchange.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +13,7 @@ import '../../widget/constants.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
 import '../../../../models/user.dart';
-import '../student/changepassword.dart';
+
 import '../student/login.dart';
 
 
@@ -140,7 +141,7 @@ class _ProfileState extends State<Profile> {
             }
           }),
           kTextButton('change password',(){
-            Get.to(const ChangePassword());
+            Get.to(const PasswordChange());
           })
         
         ],

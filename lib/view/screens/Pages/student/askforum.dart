@@ -6,49 +6,39 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 
+
+import '../../../../controller/service/forumservice.dart';
+import '../../../../models/utils/forum.dart';
 import '../../widget/constants.dart';
-import '../../../../controller/service/post_service.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
-import '../../../../models/post.dart';
 import '../student/login.dart';
 
 
-class PostForm extends StatefulWidget {
-  final announcements? post;
+class Forum extends StatefulWidget {
+  final forums? forum;
   final String? title;
 
-  const PostForm({super.key, 
-    this.post,
+  const Forum({super.key, 
+    this.forum,
     this.title
   });
 
   @override
-  _PostFormState createState() => _PostFormState();
+  _ForumState createState() => _ForumState();
 }
 
-class _PostFormState extends State<PostForm> {
+class _ForumState extends State<Forum> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
   bool _loading = false;
-   File? _imageFile;
-  final _picker = ImagePicker();
+  
 
-  Future getImage() async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null){
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  void _createPost() async {
-    String? image = _imageFile ==  null ? null : getStringImage(_imageFile);
-    ApiResponse response = await createPost(_txtControllerBody.text, image);
+  void _createForum() async {
+  
+    ApiResponse response = await createforum(_txtControllerBody.text, );
 
     if(response.error ==  null) {
       // Navigator.of(context).pop();
@@ -76,8 +66,8 @@ class _PostFormState extends State<PostForm> {
   }
 
  // edit post
-  void _editPost(int postId) async {
-    ApiResponse response = await editPost(postId, _txtControllerBody.text);
+  void _editForum(int postId) async {
+    ApiResponse response = await editforum(postId, _txtControllerBody.text);
     if (response.error == null) {
     //  Navigator.of(context).pop();
     }
@@ -105,8 +95,8 @@ class _PostFormState extends State<PostForm> {
 
   @override
   void initState() {
-    if(widget.post != null){
-      _txtControllerBody.text = widget.post!.body ?? '';
+    if(widget.forum != null){
+      _txtControllerBody.text = widget.forum!.body ?? '';
     }
     super.initState();
   }
@@ -117,36 +107,8 @@ class _PostFormState extends State<PostForm> {
       
       body:_loading ? const Center(child: CircularProgressIndicator(),) :  ListView(
         children: [
-          widget.post != null ? const SizedBox() :
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            decoration: BoxDecoration(
-              image: _imageFile == null ? null : DecorationImage(
-                image: FileImage(_imageFile ?? File('')),
-                fit: BoxFit.cover
-              )
-            ),
-            
-            child: Center(
-              child:
-                  TextButton(
-                    style: ButtonStyle(shape:       
-                      MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: const BorderSide(color: Colors.blue)
-                        )
-                      )
-                    ),
-                    onPressed: (){
-                      getImage();
-                    }, child: const Text('upload Image',style:TextStyle(fontSize: 15),),
-                  ),
-                 
-               
-            ),
-          ),
+          widget.forum != null ? const SizedBox() :
+          
           Form(
             key: _formKey,
             child: Padding(
@@ -154,10 +116,10 @@ class _PostFormState extends State<PostForm> {
               child: TextFormField(
                 controller: _txtControllerBody,
                 keyboardType: TextInputType.multiline,
-                maxLines: 9,
-                validator: (val) => val!.isEmpty ? 'Post body is required' : null,
+                maxLines: 3,
+                validator: (val) => val!.isEmpty ? 'Questions is required' : null,
                 decoration:const  InputDecoration(
-                  hintText: "Post body...",
+                  hintText: "Questions...",
                   border: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Colors.black38))
                 ),
               ),
@@ -165,15 +127,15 @@ class _PostFormState extends State<PostForm> {
           ),
           Padding(
             padding:const  EdgeInsets.symmetric(horizontal: 8),
-            child: kTextButton('Post', (){
+            child: kTextButton('Ask', (){
               if (_formKey.currentState!.validate()){
                 setState(() {
                   _loading = !_loading;
                 });
-                if (widget.post == null) {
-                  _createPost();
+                if (widget.forum == null) {
+                  _createForum();
                 } else {
-                  _editPost(widget.post!.id ?? 0);
+                  _editForum(widget.forum!.id ?? 0);
                 }
               }
             }),

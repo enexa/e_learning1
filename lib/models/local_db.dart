@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DBHelper{
   static Database?_db;
-  static final String dbName="schedule.db";
+  static final String dbName="elearning.db";
   static final String tableName="task";
   static final String id="id";
   static final int version=1;

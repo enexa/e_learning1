@@ -32,7 +32,8 @@ final fields = [
 enum UserType { Teacher, Student }
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key}) : super(key: key);
+
 
   @override
   _LoginState createState() => _LoginState();
@@ -266,7 +267,7 @@ class _LoginState extends State<Login> {
                         )
                       : kTextButton('Login', () {
                         validateDepartment();
-                          if (formkey.currentState!.validate()) {
+                         if (formkey.currentState != null && formkey.currentState!.validate()) {
                             setState(() {
                               loading = true;
                               _loginUser();

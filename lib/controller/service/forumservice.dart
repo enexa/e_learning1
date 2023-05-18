@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 
 import '../../view/screens/widget/constants.dart';
 import '../../models/api_response.dart';
+import'../../models/utils/forum.dart';
 
-import '../../models/post.dart';
 import 'use_service.dart';
 
 // get all posts
@@ -16,7 +16,7 @@ Future<ApiResponse> getPosts() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.get(Uri.parse(postsURL),
+    final response = await http.get(Uri.parse(forumsURL),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -24,7 +24,7 @@ Future<ApiResponse> getPosts() async {
 
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['posts'].map((p) => announcements.fromJson(p)).toList();
+        apiResponse.data = jsonDecode(response.body)['forums'].map((p) => forums.fromJson(p)).toList();
         apiResponse.data as List<dynamic>;
         break;
       case 401:
@@ -42,18 +42,15 @@ Future<ApiResponse> getPosts() async {
 }
 
 
-Future<ApiResponse> createPost(String body, String? image) async {
+Future<ApiResponse> createforum(String body, ) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.post(Uri.parse(postsURL),
+    final response = await http.post(Uri.parse(forumsURL),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
-    }, body: image !=null ? {
-      'body': body,
-      'image': image
-    } : {
+    }, body: {
       'body': body
     });
 
@@ -81,11 +78,11 @@ Future<ApiResponse> createPost(String body, String? image) async {
   return apiResponse;
 }
 
-Future<ApiResponse> editPost(int postId, String body) async {
+Future<ApiResponse> editforum(int forumId, String body) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.put(Uri.parse('$postsURL/$postId'),
+    final response = await http.put(Uri.parse('$forumsURL/$forumId'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -115,11 +112,11 @@ Future<ApiResponse> editPost(int postId, String body) async {
 }
 
 
-Future<ApiResponse> deletePost(int postId) async {
+Future<ApiResponse> deleteforum(int forumId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.delete(Uri.parse('$postsURL/$postId'),
+    final response = await http.delete(Uri.parse('$forumsURL/$forumId'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -147,11 +144,11 @@ Future<ApiResponse> deletePost(int postId) async {
 }
 
 
-Future<ApiResponse> likeUnlikePost(int postId) async {
+Future<ApiResponse> likeUnlikeAnswer(int forumId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.post(Uri.parse('$postsURL/$postId/likes'),
+    final response = await http.post(Uri.parse('$forumsURL/$forumId/likes'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'

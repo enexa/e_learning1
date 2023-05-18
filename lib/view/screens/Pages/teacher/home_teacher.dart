@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
           navigation[1]['pageName'],
           navigation[2]['pageName'],
           navigation[3]['pageName'],
+           navigation[4]['pageName'],
           
         ],
       ),
@@ -100,8 +101,9 @@ class _HomeState extends State<Home> {
         Icon(Icons.home,size: 20,color:blackclr),
         Icon(Icons.add_a_photo,size: 20,color:blackclr),
         Icon(Icons.live_tv_rounded,size: 20,color:blackclr),
+        Icon(Icons.picture_as_pdf,size: 20,color:blackclr),
          Icon(Icons.person,size: 20,color:blackclr),
-      
+       
         
           // Icon(Icons.perm_identity, size: 20),
         ],

@@ -73,52 +73,52 @@ class _MyStreamState extends State<MyStream> {
                     widget: IconButton(onPressed: (() => _getusertime(isStarttime: false)), icon: Icon(Icons.access_time_filled_rounded,color: Get.isDarkMode?Colors.white:Colors.grey[500],)),))  
                     ],
                   ),
-                  MyInputField(title: 'Remind', hint: "$_selectedremind minutes early",
-                  widget: DropdownButton(
-                    icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
-                    iconSize: 32,
-                    elevation: 4,
-                    style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
-                    underline: Container(height: 0,),
+                  // MyInputField(title: 'Remind', hint: "$_selectedremind minutes early",
+                  // widget: DropdownButton(
+                  //   icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
+                  //   iconSize: 32,
+                  //   elevation: 4,
+                  //   style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
+                  //   underline: Container(height: 0,),
 
-                    items: remindList.map<DropdownMenuItem<String>>((int value){
-                      return  DropdownMenuItem<String>(
-                        value: value.toString(),
-                        child: Text(value.toString()));
-                    }).toList(),
-                     onChanged: (String ?newValue){
-                      setState(() {
-                        _selectedremind=int.parse(newValue!);
-                      });
-                     }),),
+                  //   items: remindList.map<DropdownMenuItem<String>>((int value){
+                  //     return  DropdownMenuItem<String>(
+                  //       value: value.toString(),
+                  //       child: Text(value.toString()));
+                  //   }).toList(),
+                  //    onChanged: (String ?newValue){
+                  //     setState(() {
+                  //       _selectedremind=int.parse(newValue!);
+                  //     });
+                  //    }),),
                      //starts heere
-                        MyInputField(title: 'Repeat', hint: _selectedRepeat,
-                  widget: DropdownButton(
-                    icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
-                    iconSize: 32,
-                    elevation: 4,
-                    style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
-                    underline: Container(height: 0,),
+                  //       MyInputField(title: 'Repeat', hint: _selectedRepeat,
+                  // widget: DropdownButton(
+                  //   icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
+                  //   iconSize: 32,
+                  //   elevation: 4,
+                  //   style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
+                  //   underline: Container(height: 0,),
 
-                    items: repeatList.map<DropdownMenuItem<String>>((String ?value){
-                      return  DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value!,style: TextStyle(
-                          color: Get.isDarkMode?Colors.white:Colors.grey
-                        ),
-                        ),);
-                    }).toList(),
-                     onChanged: (String ?newValue){
-                      setState(() {
-                        _selectedRepeat=newValue!;
-                      });
-                     }),),
+                  //   items: repeatList.map<DropdownMenuItem<String>>((String ?value){
+                  //     return  DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value!,style: TextStyle(
+                  //         color: Get.isDarkMode?Colors.white:Colors.grey
+                  //       ),
+                  //       ),);
+                  //   }).toList(),
+                  //    onChanged: (String ?newValue){
+                  //     setState(() {
+                  //       _selectedRepeat=newValue!;
+                  //     });
+                  //    }),),
                     const SizedBox(height: 18,),
                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          _getColor() ,
+                          // _getColor() ,
                           MyButton(label: "\tSchedule \nlive stream", onTap: (){
 
                             _validate();

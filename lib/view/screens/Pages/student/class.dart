@@ -1,123 +1,110 @@
-import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
-class PdfFile {
-  final String name;
-  final String path;
-
-  PdfFile({required this.name, required this.path});
-}
-
-class PdfListWidget extends StatefulWidget {
+class PdfScreen extends StatefulWidget {
   @override
-  _PdfListWidgetState createState() => _PdfListWidgetState();
+  _PdfScreenState createState() => _PdfScreenState();
 }
 
-class _PdfListWidgetState extends State<PdfListWidget> {
-  late List<String> _categories;
-  late List<String> _years;
-  late Map<String, List<List<PdfFile>>> _pdfFiles;
+class _PdfScreenState extends State<PdfScreen> {
+  List<String> categories = ['CS', 'IS', 'IT', 'SW'];
+  List<String> years = ['1', '2', '3', '4'];
+  List<Map<String, dynamic>> pdfList = [];
 
   @override
   void initState() {
     super.initState();
-    _categories = ['SW', 'IS', 'IT', 'CS'];
-    _years = ['1st', '2nd', '3rd', '4th'];
-    _pdfFiles = Map.fromIterable(
-      _categories,
-      key: (category) => category,
-      value: (category) => List.generate(
-        _years.length,
-        (index) => [],
-      ),
-    );
     fetchPdfFiles();
   }
 
   Future<void> fetchPdfFiles() async {
-    final response = await http.get(Uri.parse('http://10.42.0.1:8000/api/pdf'));
-    final data = jsonDecode(response.body);
-    setState(() {
-      for (var key in data['files'].keys) {
-        final parts = key.split(' ');
-        final category = parts[0];
-        final year = parts[1];
-        final pdfFiles = data['files'][key].map<PdfFile>((path) {
-          return PdfFile(name: path.split('/').last, path: path);
-        }).toList();
-        _pdfFiles[category]![_years.indexOf(year)] = pdfFiles;
+    try {
+      Dio dio = Dio();
+      Response response = await dio.get('http://10.42.0.1:8000/api/pdf');
+      if (response.statusCode == 200) {
+        setState(() {
+          pdfList = List<Map<String, dynamic>>.from(response.data);
+        });
       }
-    });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> downloadAndOpenPdf(String url, String fileName) async {
+    Dio dio = Dio();
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String filePath = '${appDocDir.path}/$fileName.pdf';
+
+    try {
+      await dio.download(url, filePath);
+      OpenFile.open(filePath);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  List<Map<String, dynamic>> filterPdfList(String category, String year) {
+    return pdfList
+        .where((pdf) => pdf['category'] == category && pdf['year'] == year)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('PDF Files'),
+    
+      body: ListView.builder(
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          String category = categories[index];
+
+          return ExpansionTile(
+            title: Text(category),
+            children: [
+              for (String year in years)
+                ListTile(
+                  title: Text('Year $year'),
+                  onTap: () {
+                    List<Map<String, dynamic>> filteredPdfList =
+                        filterPdfList(category, year);
+
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('PDF Files'),
+                          content: Column(
+                            children: [
+                              for (Map<String, dynamic> pdf in filteredPdfList)
+                                ListTile(
+                                  title: Text(pdf['name']),
+                                  onTap: () {
+                                    downloadAndOpenPdf(pdf['path'], pdf['name']);
+                                  },
+                                ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+            ],
+          );
+        },
       ),
-      body: SingleChildScrollView(
-        child: ExpansionPanelList(
-          expansionCallback: (index, isExpanded) {
-            setState(() {
-              _categories[index] = isExpanded ? _categories[index] : '';
-            });
-          },
-          children: _categories.map((category) {
-            final index = _categories.indexOf(category);
-            final pdfFiles = _pdfFiles[category]!;
-            return ExpansionPanel(
-              isExpanded: category.isNotEmpty,
-              headerBuilder: (_, __) {
-                return ListTile(
-                  title: Text(category),
-                );
-              },
-              body: Column(
-                children: _years.map((year) {
-                  final index = _years.indexOf(year);
-                  final pdfFilesForYear = pdfFiles[index];
-                  if (pdfFilesForYear.isEmpty || pdfFilesForYear[0].name.isEmpty) {
-                    return SizedBox.shrink();
-                  }
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(year),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: pdfFilesForYear.length,
-                        itemBuilder: (context, index) {
-                          final pdfFile = pdfFilesForYear[index];
-                          return ListTile(
-                            title: Text(pdfFile.name),
-                            onTap: () async {
-                              final url = 'http://10.42.0.1:8000/api/${pdfFile.path}';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Could not open the file'),
-                                  ),
-                                );
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            );
-            }).toList(),
-    ),
-  ),
-);
-  }}
+    );
+  }
+}

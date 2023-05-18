@@ -1,55 +1,73 @@
 
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, duplicate_ignore
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-
-import '../../../../controller/service/comment_service.dart';
+import '../../../../controller/service/forumservice.dart';
 import '../../../../controller/service/use_service.dart';
 import '../../../../models/api_response.dart';
-import '../../../../models/comment.dart';
+import '../../../../models/utils/forum.dart';
 import '../../widget/constants.dart';
+import '../teacher/comment_screen.dart';
+import 'askforum.dart';
 import 'login.dart';
 
-
-
-
-class Forum extends StatefulWidget {
-  final int? postId;
-
-   const Forum({super.key, 
-    this.postId
-  });
+class ForumScreen extends StatefulWidget {
+  const ForumScreen({super.key});
 
   @override
-  _ForumState createState() => _ForumState();
+  _ForumScreenState createState() => _ForumScreenState();
 }
 
-class _ForumState extends State<Forum> {
-  List<dynamic> _commentsList = [];
-  bool _loading = true;
+class _ForumScreenState extends State<ForumScreen> {
+  List<dynamic> _postList = [];
   int userId = 0;
-  int _editCommentId = 0;
-  final TextEditingController _txtCommentController = TextEditingController();
+  bool _loading = true;
 
-  // Get comments
-  Future<void> _getComments() async {
+  // get all posts
+  Future<void> retrievePosts() async {
     userId = await getUserId();
-    ApiResponse response = await getComments(widget.postId ?? 0);
+    ApiResponse response = await getPosts();
 
     if(response.error == null){
       setState(() {
-        _commentsList = response.data as List<dynamic>;
+        _postList = response.data as List<dynamic>;
         _loading = _loading ? !_loading : _loading;
       });
+    }
+    else if (response.error == unauthorized){
+      logout().then((value) => {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Login()), (route) => false)
+      });
+    }
+    else {
+      Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
+
+    );
+    }
+  }
+
+
+  void _handleDeletePost(int postId) async {
+    ApiResponse response = await deleteforum(postId);
+    if (response.error == null){
+      retrievePosts();
     }
     else if(response.error == unauthorized){
       logout().then((value) => {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Login()), (route) => false)
       });
-    }
+    } 
     else {
      Get.snackbar("Error", "${response.error}",
     
@@ -63,37 +81,15 @@ class _ForumState extends State<Forum> {
     );
     }
   }
-  // create comment
-  void _createComment() async {
-    ApiResponse response = await createComment(widget.postId ?? 0, _txtCommentController.text);
+
+
+
+  // post like dislik
+  void _handlePostLikeDislike(int postId) async {
+    ApiResponse response = await likeUnlikeAnswer(postId);
 
     if(response.error == null){
-      _txtCommentController.clear();
-      _getComments();
-    } 
-    else if(response.error == unauthorized){
-      logout().then((value) => {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Login()), (route) => false)
-      });
-    }
-    else {
-      setState(() {
-        _loading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
-
-  // edit comment
-void _editComment() async {
-    ApiResponse response = await editComment(_editCommentId, _txtCommentController.text);
-
-    if(response.error == null) {
-      _editCommentId = 0;
-      _txtCommentController.clear();
-      _getComments();
+      retrievePosts();
     }
     else if(response.error == unauthorized){
       logout().then((value) => {
@@ -101,167 +97,147 @@ void _editComment() async {
       });
     } 
     else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
+     Get.snackbar("Error", "${response.error}",
+    
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: Colors.white,
+    colorText: Colors.red,
+    icon: const Icon(Icons.error,color: Colors.red,),
+    
+    
 
-
-  // Delete comment
-  void _deleteComment(int commentId) async {
-    ApiResponse response = await deleteComment(commentId);
-
-    if(response.error == null){
-      _getComments();
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Login()), (route) => false)
-      });
-    } 
-    else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
+    );
     }
   }
 
   @override
   void initState() {
-    _getComments();
+    retrievePosts();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      // body: _loading ? const Center(child: CircularProgressIndicator(),) :
-    body:  Column(
-        children: [
-     const    Center(child: Text('welcome to BDU forum ask anything')),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: (){
-                return _getComments();
-              },
-              child: ListView.builder(
-                itemCount: _commentsList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Comment comment = _commentsList[index];
-                  return Container(
-                    padding:const  EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.black26, width: 0.5)
-                      )
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    image: comment.user!.image != null ? DecorationImage(
-                                      image: NetworkImage('${comment.user!.image}'),
-                                      fit: BoxFit.cover
-                                    ) : null,
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.blueGrey
-                                  ),
-                                ),
-                              const  SizedBox(width: 10,),
-                                Text(
-                                  '${comment.user!.name}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16
-                                  ),
-                                )
-                              ],
+    return _loading ? const Center(child:CircularProgressIndicator()) :
+    RefreshIndicator(
+      onRefresh: () {
+        return retrievePosts();
+      },
+      child: ListView.builder(
+        itemCount: _postList.length,
+        itemBuilder: (BuildContext context, int index){
+          forums post = _postList[index];
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Row(
+                        children: [
+                          const Forum(),
+                          Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              image: post.user!.image != null ?
+                                DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.amber
                             ),
-                            comment.user!.id == userId ?
-                             PopupMenuButton(
-                              child:const  Padding(
-                                padding: EdgeInsets.only(right:10),
-                                child: Icon(Icons.more_vert, color: Colors.black,)
-                              ),
-                              itemBuilder: (context) => [
-                                const PopupMenuItem(
-                                  value: 'edit',
-                                  child:  Text('Edit')
-                                ),
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text('Delete')
-                                )
-                              ],
-                              onSelected: (val){
-                                if(val == 'edit'){
-                                  setState(() {
-                                    _editCommentId = comment.id ?? 0;
-                                    _txtCommentController.text = comment.comment ?? '';
-                                  });
-                                  
-                                } else {
-                                  _deleteComment(comment.id ?? 0);
-                                }
-                              },
-                            ) :const  SizedBox()
-                          ],
-                        ), const SizedBox(height: 10,),
-                        Text('${comment.comment}')
-                      ],
+                          ),
+                          const SizedBox(width: 10,),
+                          Text(
+                            '${post.user!.name}',
+                            style:const  TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  );
-                }
-              )
-            )
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Colors.black26, width: 0.5
-              )
-            ),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  decoration: kInputDecoration('Ask'),
-                  controller: _txtCommentController,
+                    post.user!.id == userId ?
+                    PopupMenuButton(
+                      child: const Padding(
+                        padding: EdgeInsets.only(right:10),
+                        child: Icon(Icons.more_vert, color: Colors.black,)
+                      ),
+                      itemBuilder: (context) => [
+                       const PopupMenuItem(
+                          value: 'edit',
+                          child:  Text('Edit')
+                        ),
+                       const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Delete')
+                        )
+                      ],
+                      onSelected: (val){
+                        if(val == 'edit'){
+                          Get.to(Forum(forum: post,title:'Edit Post' ,));
+                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
+                          //    title: 'Edsit Post',
+                          //    post: post,
+                          //  )));
+                        } else {
+                          _handleDeletePost(post.id ?? 0);
+                        }
+                      },
+                    ) :const  SizedBox()
+                  ],
                 ),
-              ),
-              IconButton(
-                icon:const  Icon(Icons.send),
-                onPressed: (){
-                  if(_txtCommentController.text.isNotEmpty){
-                    setState(() {
-                      _loading = true;
-                    });
-                  if (_editCommentId > 0){
-                    _editComment();
-                  } else {
-                    _createComment();
-                  }
-                  }
-                },
-              )
-            ],
-          ),
-        )
-        ]
+                const SizedBox(height: 12,),
+                Text('${post.body}'),
+                
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 180,
+                  margin:const  EdgeInsets.only(top: 5),
+                  
+                ) ,
+               
+                Row(
+                  children: [
+                    kLikeAndComment(
+                      post.likesCount ?? 0,
+                      post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
+                      post.selfLiked == true ? Colors.red : Colors.black54,
+                      (){
+                        _handlePostLikeDislike(post.id ?? 0);
+                      }
+                    ),
+                    Container(
+                      height: 25,
+                      width: 0.5,
+                      color: Colors.black38,
+                    ),
+                    kLikeAndComment(
+                      post.commentsCount ?? 0,
+                      Icons.sms_outlined,
+                      Colors.black54,
+                      (){
+                        Get.to(CommentScreen(postId: post.id));
+                        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                        //   postId: post.id,
+                        // )));
+                      }
+                    ),
+                  ],
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 0.5,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+          );
+        }
       ),
     );
   }

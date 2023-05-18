@@ -10,14 +10,14 @@ import 'package:http/http.dart' as http;
 import '../../colors.dart';
 import '../../widget/constants.dart';
 
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
+class PasswordChange extends StatefulWidget {
+  const PasswordChange({super.key});
 
   @override
-  State<ChangePassword> createState() => _ChangePasswordState();
+  State<PasswordChange> createState() => _PasswordChangeState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> {
+class _PasswordChangeState extends State<PasswordChange> {
   final _formKey = GlobalKey<FormState>();
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
