@@ -30,7 +30,7 @@ class _ForumScreenState extends State<ForumScreen> {
   // get all posts
   Future<void> retrievePosts() async {
     userId = await getUserId();
-    ApiResponse response = await getPosts();
+    ApiResponse response = await getForums();
 
     if(response.error == null){
       setState(() {
@@ -139,7 +139,7 @@ class _ForumScreenState extends State<ForumScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 6),
                       child: Row(
                         children: [
-                          const Forum(),
+                        
                           Container(
                             width: 38,
                             height: 38,
@@ -180,10 +180,10 @@ class _ForumScreenState extends State<ForumScreen> {
                       onSelected: (val){
                         if(val == 'edit'){
                           Get.to(Forum(forum: post,title:'Edit Post' ,));
-                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
-                          //    title: 'Edsit Post',
-                          //    post: post,
-                          //  )));
+                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Forum(
+                             title: 'Edsit Post',
+                             forum: post,
+                           )));
                         } else {
                           _handleDeletePost(post.id ?? 0);
                         }
@@ -222,9 +222,9 @@ class _ForumScreenState extends State<ForumScreen> {
                       Colors.black54,
                       (){
                         Get.to(CommentScreen(postId: post.id));
-                        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
-                        //   postId: post.id,
-                        // )));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                          postId: post.id,
+                        )));
                       }
                     ),
                   ],

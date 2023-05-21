@@ -105,7 +105,7 @@ class _ForumState extends State<Forum> {
   Widget build(BuildContext context) {
     return Scaffold(
       
-      body:_loading ? const Center(child: CircularProgressIndicator(),) :  ListView(
+      body: ListView(
         children: [
           widget.forum != null ? const SizedBox() :
           

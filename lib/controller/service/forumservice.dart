@@ -12,7 +12,7 @@ import'../../models/utils/forum.dart';
 import 'use_service.dart';
 
 // get all posts
-Future<ApiResponse> getPosts() async {
+Future<ApiResponse> getForums() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();

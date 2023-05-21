@@ -50,7 +50,7 @@ Widget buildPage(
     
 }
 const appId="52e41f55a5d14274a6b80f1d982bf3b4";
-const baseURL = 'http://10.42.0.1:8000/api';
+const baseURL = 'http://192.168.0.15:8000/api';
 const loginURL = '$baseURL/login';
 const teacherloginURL = '$baseURL/teacher-login';
 const registerURL = '$baseURL/register';

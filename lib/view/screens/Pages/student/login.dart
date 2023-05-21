@@ -79,14 +79,16 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void _saveAndRedirectToHome(User user) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('token', user.token ?? '');
-    await pref.setInt('userId', user.id ?? 0);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const Homewillbe()),
-        (route) => false);
-  }
+ void _saveAndRedirectToHome(User user) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  await pref.setString('token', user.token ?? '');
+  await pref.setInt('userId', user.id ?? 0);
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (context) => const Homewillbe()),
+    (route) => false
+  );
+}
+
 
   @override
   void initState() {

@@ -1,5 +1,6 @@
 
 
+import 'package:e_learning/view/screens/Pages/student/askforum.dart';
 import 'package:e_learning/view/screens/Pages/teacher/post.dart';
 import 'package:e_learning/view/screens/Pages/teacher/uploadpdf.dart';
 
@@ -24,16 +25,19 @@ final List<Map<String, dynamic>> pageDetails = [
     'pageName': const Try(),
   },
   {
-    'pageName':   PdfScreen(),
+    'pageName':     PdfScreen(),
   },
-  {
+  {        
     'pageName': const Blog(),
   },
   {
     'pageName': const ForumScreen(),
   },
-  {
-    'pageName': const Student_Profile(),
+  // {
+  //   'pageName': const Student_Profile(),
+  // },
+    {
+    'pageName': const Forum(),
   },
 ];
 final List<Map<String, dynamic>> navigation = [
