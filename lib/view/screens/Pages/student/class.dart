@@ -28,7 +28,6 @@ class PdfScreen extends StatefulWidget {
   @override
   _PdfScreenState createState() => _PdfScreenState();
 }
-
 class _PdfScreenState extends State<PdfScreen> {
   List<PdfFile> pdfFiles = [];
   bool isLoading = true;
@@ -115,40 +114,36 @@ class _PdfScreenState extends State<PdfScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  ExpansionTile(
-                    title: Text('Select Category'),
-                    children: getUniqueCategories().map((category) {
-                      return ListTile(
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: getUniqueCategories().length,
+                    itemBuilder: (context, index) {
+                      var category = getUniqueCategories()[index];
+                      return ExpansionTile(
                         title: Text(category),
-                        onTap: () {
-                          setState(() {
-                            selectedCategory = category;
-                            selectedYear = null;
-                          });
-                        },
+                        children: [
+                          ...getUniqueYearsForCategory(category).map((year) {
+                            return ListTile(
+                              leading: Icon(Icons.picture_as_pdf),
+                              title: Text('Year $year'),
+                              onTap: () {
+                                setState(() {
+                                  selectedCategory = category;
+                                  selectedYear = year;
+                                });
+                              },
+                            );
+                          }),
+                        ],
                       );
-                    }).toList(),
+                    },
                   ),
-                  if (selectedCategory != null)
-                    ExpansionTile(
-                      title: Text('Select Year'),
-                      children: getUniqueYearsForCategory(selectedCategory!).map((year) {
-                        return ListTile(
-                          title: Text('Year $year'),
-                          onTap: () {
-                            setState(() {
-                              selectedYear = year;
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
                   if (selectedCategory != null && selectedYear != null)
                     ListView.builder(
                       shrinkWrap: true,
@@ -178,6 +173,8 @@ class _PdfScreenState extends State<PdfScreen> {
     );
   }
 }
+
+
 
 
 

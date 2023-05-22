@@ -60,7 +60,7 @@ const changepasswordURL = '$baseURL/change-password';
 const logoutURL = '$baseURL/logout';
 const userURL = '$baseURL/user';
 const postsURL = '$baseURL/announcements';
-const commentsURL = '$baseURL/forum';
+const commentsURL = '$baseURL/comments';
 const forumsURL = '$baseURL/forums';
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
@@ -120,7 +120,9 @@ Expanded kLikeAndComment(
                 size: 16,
                 color: color,
               ),
-             const SizedBox(width: 4),
+              const   Text(
+                     'Answer'
+                    ),
               Text('$value')
             ],
           ),

@@ -194,29 +194,24 @@ class _ForumScreenState extends State<ForumScreen> {
                 const SizedBox(height: 12,),
                 Text('${post.body}'),
                 
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 180,
-                  margin:const  EdgeInsets.only(top: 5),
+                // Container(
+                //   width: MediaQuery.of(context).size.width,
+                //   height: 180,
+                //   margin:const  EdgeInsets.only(top: 5),
                   
-                ) ,
+                // ) ,
                
                 Row(
                   children: [
-                    kLikeAndComment(
-                      post.likesCount ?? 0,
-                      post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
-                      post.selfLiked == true ? Colors.red : Colors.black54,
-                      (){
-                        _handlePostLikeDislike(post.id ?? 0);
-                      }
-                    ),
-                    Container(
-                      height: 25,
-                      width: 0.5,
-                      color: Colors.black38,
-                    ),
-                    kLikeAndComment(
+                    // kLikeAndComment(
+                    //   post.likesCount ?? 0,
+                    //   post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
+                    //   post.selfLiked == true ? Colors.red : Colors.black54,
+                    //   (){
+                    //     _handlePostLikeDislike(post.id ?? 0);
+                    //   }
+                    // ),
+                     kLikeAndComment(
                       post.commentsCount ?? 0,
                       Icons.sms_outlined,
                       Colors.black54,
@@ -227,6 +222,8 @@ class _ForumScreenState extends State<ForumScreen> {
                         )));
                       }
                     ),
+                 
+                   
                   ],
                 ),
                 Container(

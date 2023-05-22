@@ -2,8 +2,10 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, duplicate_ignore
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
+import '../../colors.dart';
 import '../../widget/constants.dart';
 import '../../../../controller/service/comment_service.dart';
 import '../../../../controller/service/use_service.dart';
@@ -127,7 +129,14 @@ void _editComment() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Comments'),
+         backgroundColor: context.theme.backgroundColor,
+        leading: GestureDetector(
+          onTap: ()=>Get.back(),
+          child: const Icon(Icons.arrow_back_ios_new)),
+          title:  Text('Answers',style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
+          centerTitle: true,
+        
+          foregroundColor: Get.isDarkMode?Colors.white:Colors.black
       ),
       body: _loading ? const Center(child: CircularProgressIndicator(),) :
       Column(

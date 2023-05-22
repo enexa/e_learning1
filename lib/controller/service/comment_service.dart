@@ -17,7 +17,7 @@ Future<ApiResponse> getComments(int postId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.get(Uri.parse('$postsURL/$postId/comments'),
+    final response = await http.get(Uri.parse('$forumsURL/$postId/comments'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -53,7 +53,7 @@ Future<ApiResponse> createComment(int postId, String? comment) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.post(Uri.parse('$postsURL/$postId/comments'),
+    final response = await http.post(Uri.parse('$forumsURL/$postId/comments'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
