@@ -16,6 +16,7 @@ import '../../colors.dart';
 import '../../widget/constants.dart';
 import '../teacher/login_teacher.dart';
 import 'home.dart';
+import 'mycourse.dart';
 import 'register.dart';
 
 
@@ -84,7 +85,7 @@ class _LoginState extends State<Login> {
   await pref.setString('token', user.token ?? '');
   await pref.setInt('userId', user.id ?? 0);
   Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => const Homewillbe()),
+    MaterialPageRoute(builder: (context) =>  CourseListPage()),
     (route) => false
   );
 }

@@ -227,8 +227,8 @@ color: Colors.red,
           Icon(Icons.picture_as_pdf_rounded,size: 20,color: blackclr),
           Icon(Icons.notifications,size: 20,color: blackclr,),
           Icon(Icons.forum,size: 20,color: blackclr,),
-          // Icon(Icons.person,size: 20,color: blackclr),
-           Icon(Icons.forum,size: 20,color: blackclr),
+          Icon(Icons.person,size: 20,color: blackclr),
+        
           
             // Icon(Icons.perm_identity, size: 20),
           ],

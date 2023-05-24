@@ -104,6 +104,12 @@ class _ForumState extends State<Forum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: ()=> Get.back(),
+         child:  Icon(Icons.arrow_back_ios_new,color: Get.isDarkMode?Colors.white:Colors.black,),
+        ),
+      ),
       
       body: ListView(
         children: [

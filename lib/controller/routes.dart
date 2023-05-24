@@ -11,7 +11,9 @@ import '../view/screens/Pages/student/Blog.dart';
 import '../view/screens/Pages/student/class.dart';
 import '../view/screens/Pages/student/forum.dart';
 import '../view/screens/Pages/student/home1.dart';
+import '../view/screens/Pages/student/mycourse.dart';
 import '../view/screens/Pages/student/student_profile.dart';
+import '../view/screens/Pages/teacher/Course.dart';
 import '../view/screens/Pages/teacher/home_screen.dart';
 
 
@@ -22,7 +24,7 @@ import '../view/screens/Pages/teacher/schedule_stream.dart';
 
 final List<Map<String, dynamic>> pageDetails = [
   {
-    'pageName': const Try(),
+    'pageName': CourseListPage(),
   },
   {
     'pageName':     PdfScreen(),
@@ -33,12 +35,10 @@ final List<Map<String, dynamic>> pageDetails = [
   {
     'pageName': const ForumScreen(),
   },
-  // {
-  //   'pageName': const Student_Profile(),
-  // },
-    {
-    'pageName': const Forum(),
+  {
+    'pageName': const Student_Profile(),
   },
+    
 ];
 final List<Map<String, dynamic>> navigation = [
   {
@@ -51,7 +51,7 @@ final List<Map<String, dynamic>> navigation = [
     'pageName': const MyStream(),
   },
   {
-    'pageName': const PdfUpload(),
+    'pageName': const TeacherCourseCreationScreen(),
   },
    {
     'pageName': const Profile(),

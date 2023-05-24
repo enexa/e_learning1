@@ -58,7 +58,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       appBar: AppBar(
          backgroundColor: context.theme.backgroundColor,
         leading: GestureDetector(
-          onTap: () => Get.back,
+          onTap: () => Get.back(),
           child:  Icon(Icons.arrow_back_ios_new,color: Get.isDarkMode?Colors.white:Colors.black,),
         ),
         title:  Text('Change Password',style:headingstyle(Get.isDarkMode?Colors.white:Colors.black)),

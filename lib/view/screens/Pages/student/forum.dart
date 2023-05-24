@@ -119,123 +119,128 @@ class _ForumScreenState extends State<ForumScreen> {
   @override
   Widget build(BuildContext context) {
     return _loading ? const Center(child:CircularProgressIndicator()) :
-    RefreshIndicator(
-      onRefresh: () {
-        return retrievePosts();
-      },
-      child: ListView.builder(
-        itemCount: _postList.length,
-        itemBuilder: (BuildContext context, int index){
-          forums post = _postList[index];
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+   
+       Stack(
+        children: [
+          ListView.builder(
+            itemCount: _postList.length,
+            itemBuilder: (BuildContext context, int index){
+              forums post = _postList[index];
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Row(
-                        children: [
-                        
-                          Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              image: post.user!.image != null ?
-                                DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.amber
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: Row(
+                            children: [
+                            
+                              Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  image: post.user!.image != null ?
+                                    DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.amber
+                                ),
+                              ),
+                              const SizedBox(width: 10,),
+                              Text(
+                                '${post.user!.name}',
+                                style:const  TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17
+                                ),
+                              )
+                            ],
                           ),
-                          const SizedBox(width: 10,),
-                          Text(
-                            '${post.user!.name}',
-                            style:const  TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    post.user!.id == userId ?
-                    PopupMenuButton(
-                      child: const Padding(
-                        padding: EdgeInsets.only(right:10),
-                        child: Icon(Icons.more_vert, color: Colors.black,)
-                      ),
-                      itemBuilder: (context) => [
-                       const PopupMenuItem(
-                          value: 'edit',
-                          child:  Text('Edit')
                         ),
-                       const PopupMenuItem(
-                          value: 'delete',
-                          child: Text('Delete')
-                        )
+                        post.user!.id == userId ?
+                        PopupMenuButton(
+                          child: const Padding(
+                            padding: EdgeInsets.only(right:10),
+                            child: Icon(Icons.more_vert, color: Colors.black,)
+                          ),
+                          itemBuilder: (context) => [
+                           
+                            // const PopupMenuItem(
+                            //   value: 'edit',
+                            //   child: Text('Edit')
+                            // ),
+                           const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete')
+                            )
+                          ],
+                          onSelected: (val){
+                            if(val == 'edit'){
+                              Get.to(Forum(forum: post,title:'Edit Post' ,));
+                              //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Forum(
+                              //    title: 'Edit Post',
+                              //    forum: post,
+                              //  )));
+                            } else {
+                              _handleDeletePost(post.id ?? 0);
+                            }
+                          },
+                        ) :const  SizedBox()
                       ],
-                      onSelected: (val){
-                        if(val == 'edit'){
-                          Get.to(Forum(forum: post,title:'Edit Post' ,));
-                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Forum(
-                             title: 'Edsit Post',
-                             forum: post,
-                           )));
-                        } else {
-                          _handleDeletePost(post.id ?? 0);
-                        }
-                      },
-                    ) :const  SizedBox()
-                  ],
-                ),
-                const SizedBox(height: 12,),
-                Text('${post.body}'),
-                
-                // Container(
-                //   width: MediaQuery.of(context).size.width,
-                //   height: 180,
-                //   margin:const  EdgeInsets.only(top: 5),
-                  
-                // ) ,
-               
-                Row(
-                  children: [
-                    // kLikeAndComment(
-                    //   post.likesCount ?? 0,
-                    //   post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
-                    //   post.selfLiked == true ? Colors.red : Colors.black54,
-                    //   (){
-                    //     _handlePostLikeDislike(post.id ?? 0);
-                    //   }
-                    // ),
-                     kLikeAndComment(
-                      post.commentsCount ?? 0,
-                      Icons.sms_outlined,
-                      Colors.black54,
-                      (){
-                        Get.to(CommentScreen(postId: post.id));
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
-                          postId: post.id,
-                        )));
-                      }
                     ),
-                 
+                    const SizedBox(height: 12,),
+                    Text('${post.body}'),
                    
+                    Row(
+                      children: [
+                       
+                         kLikeAndComment(
+                          post.commentsCount ?? 0,
+                          Icons.sms_outlined,
+                          Colors.black54,
+                          (){
+                            Get.to(CommentScreen(postId: post.id));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                              postId: post.id,
+                            )));
+                          }
+                        ),
+                     
+                       
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 0.5,
+                      color: Colors.black26,
+                    ),
                   ],
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 0.5,
-                  color: Colors.black26,
-                ),
-              ],
-            ),
-          );
-        }
-      ),
-    );
+              );
+            }
+          ),
+           Positioned(
+              bottom: 16,
+              left: 2,
+              right: 2,
+              child: TextButton(
+                    style: ButtonStyle(shape:       
+                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: const BorderSide(color: Colors.blue)
+                        )
+                      )
+                    ),
+                   onPressed: () => Get.to(const Forum(title: 'Ask Forum',)),
+                    child: const Text('Ask Forum',style:TextStyle(fontSize: 15),),
+                  ),
+              ),
+        ],
+      );
+    
   }
 }
