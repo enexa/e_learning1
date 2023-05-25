@@ -4,6 +4,7 @@ import 'dart:io';
 
 
 
+import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -105,10 +106,14 @@ class _ForumState extends State<Forum> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: context.theme.backgroundColor,
         leading: GestureDetector(
-          onTap: ()=> Get.back(),
-         child:  Icon(Icons.arrow_back_ios_new,color: Get.isDarkMode?Colors.white:Colors.black,),
-        ),
+          onTap: ()=>Get.back(),
+          child: const Icon(Icons.arrow_back_ios_new)),
+          title:  Text('Ask Forum',style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
+          centerTitle: true,
+        
+          foregroundColor: Get.isDarkMode?Colors.white:Colors.black
       ),
       
       body: ListView(

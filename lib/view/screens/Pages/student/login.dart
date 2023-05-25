@@ -59,9 +59,9 @@ class _LoginState extends State<Login> {
 
   void _loginUser() async {
     ApiResponse response = await login(txtEmail.text, txtPassword.text,departmentController.text);
-    if (response.error == null) {
-      _saveAndRedirectToHome(response.data as User);
-    } else {
+    if (response.error == null && response.data != null) {
+  _saveAndRedirectToHome(response.data as User);
+} else {
       setState(() {
         loading = false;
       });
@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
   await pref.setString('token', user.token ?? '');
   await pref.setInt('userId', user.id ?? 0);
   Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) =>  CourseListPage()),
+    MaterialPageRoute(builder: (context) =>  Homewillbe()),
     (route) => false
   );
 }

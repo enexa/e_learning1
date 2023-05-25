@@ -1,7 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:e_learning/view/screens/Pages/student/vedeo_player.dart';
+import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -92,7 +94,7 @@ class _CourseListPageState extends State<CourseListPage> {
                             top: 20.0, bottom: 0.0, left: 10.0),
                         child:  Text(
                           textAlign: TextAlign.start,
-                          'Hello\n ${user!.name}',
+                          'Hello\n ${user?.name ?? "Guest"}',
                           style:const TextStyle(
                               color: Color.fromARGB(255, 29, 82, 31),
                               fontWeight: FontWeight.bold,
@@ -119,84 +121,12 @@ class _CourseListPageState extends State<CourseListPage> {
                           //     setState(() => isNotSearching = true),
                         ),
                       ),
-                       SizedBox(
-                        height: 100,
-                        child: ListView.builder(
-                          itemCount: courses.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            final course = courses[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(7.0),
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 5),
-                                height: 70,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return VideoPage(
-                                            videoUrl: course.video,
-                                            title: course.title,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          blurRadius: 2,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10.0),
-                                            image: DecorationImage(
-                                              image: NetworkImage(course.thumbnail),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          height: 60,
-                                          width: 60,
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          course.title,
-                                          style: const TextStyle(
-                                            color: Color.fromARGB(255, 29, 82, 31),
-                                            fontStyle: FontStyle.italic,
-                                            fontWeight: FontWeight.w100,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          course.description,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      const  SizedBox(height: 15,),
+                 Padding(
+                  padding: const  EdgeInsets.fromLTRB(15, 0, 15, 10),
+                  child: Text("Courses", style: subheading(Get.isDarkMode?Colors.white:Colors.black)),
+                ),
+                       
                       SizedBox(
                         height: 200,
                         child: ListView.builder(
@@ -249,6 +179,88 @@ class _CourseListPageState extends State<CourseListPage> {
                                           ),
                                           height: 200,
                                           width: 200,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          course.title,
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(255, 29, 82, 31),
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.w100,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          course.description,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                       Padding(
+                         padding: const EdgeInsets.all(8.0),
+                         child: Text("Recent", style: subheading(Get.isDarkMode?Colors.white:Colors.black)),
+                       ),
+                      SizedBox(
+                        height: 100,
+                        child: ListView.builder(
+                          itemCount: courses.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final course = courses[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(7.0),
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 5),
+                                height: 70,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return VideoPage(
+                                            videoUrl: course.video,
+                                            title: course.title,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          blurRadius: 2,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            image: DecorationImage(
+                                              image: NetworkImage(course.thumbnail),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          height: 60,
+                                          width: 60,
                                         ),
                                         const SizedBox(height: 10),
                                         Text(

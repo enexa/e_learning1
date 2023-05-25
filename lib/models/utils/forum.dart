@@ -6,6 +6,7 @@ import 'package:e_learning/models/user.dart';
 class forums {
   int? id;
   String? body;
+  String? image;
   int? likesCount;
   int? commentsCount;
   User? user;
@@ -14,6 +15,7 @@ class forums {
   forums({
     this.id,
     this.body,
+    this.image,
     this.likesCount,
     this.commentsCount,
     this.user,
@@ -32,6 +34,7 @@ factory forums.fromJson(Map<String, dynamic> json) {
     user: User(
       id: json['user']['id'],
       name: json['user']['name'],
+      image: json['user']['image']
     )
   );
 }

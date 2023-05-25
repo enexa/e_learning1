@@ -239,7 +239,7 @@ void _editComment() async {
             children: [
               Expanded(
                 child: TextFormField(
-                  decoration: kInputDecoration('Comment'),
+                  decoration: kInputDecoration('Answer'),
                   controller: _txtCommentController,
                 ),
               ),
