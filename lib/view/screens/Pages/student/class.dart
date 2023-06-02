@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -125,22 +126,39 @@ class _PdfScreenState extends State<PdfScreen> {
                     itemCount: getUniqueCategories().length,
                     itemBuilder: (context, index) {
                       var category = getUniqueCategories()[index];
-                      return ExpansionTile(
-                        title: Text(category),
-                        children: [
-                          ...getUniqueYearsForCategory(category).map((year) {
-                            return ListTile(
-                              leading: Icon(Icons.picture_as_pdf),
-                              title: Text('Year $year'),
-                              onTap: () {
-                                setState(() {
-                                  selectedCategory = category;
-                                  selectedYear = year;
-                                });
-                              },
-                            );
-                          }),
-                        ],
+                      return Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Container(
+                           decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            blurRadius: 2,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                          child: ExpansionTile(
+                            
+                            title: Text(category),
+                            children: [
+                              ...getUniqueYearsForCategory(category).map((year) {
+                                return ListTile(
+                                  leading: Icon(Icons.picture_as_pdf),
+                                  title: Text('Year $year'),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCategory = category;
+                                      selectedYear = year;
+                                    });
+                                  },
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   ),

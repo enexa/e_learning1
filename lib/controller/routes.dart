@@ -51,7 +51,7 @@ final List<Map<String, dynamic>> navigation = [
     'pageName': const MyStream(),
   },
   {
-    'pageName': const TeacherCourseCreationScreen(),
+    'pageName':  const TeacherCourseCreationScreen(),
   },
    {
     'pageName': const Profile(),

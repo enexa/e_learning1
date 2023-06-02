@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 import '../../widget/constants.dart';
+// 'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx', // Replace with your authorization token
+//       'Accept': 'application/json',
+
 
 class TeacherCourseCreationScreen extends StatefulWidget {
   const TeacherCourseCreationScreen({super.key});
@@ -18,7 +22,7 @@ class _TeacherCourseCreationScreenState
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late File _thumbnailImage;
-  late File _videoFile;
+  List<File> _videoFiles = [];
   bool _isUploading = false;
 
   Future<void> _uploadCourse() async {
@@ -47,11 +51,13 @@ class _TeacherCourseCreationScreenState
       request.files.add(thumbnailImage);
     }
 
-    // Add video file
-    if (_videoFile != null) {
-      var videoFile =
-          await http.MultipartFile.fromPath('video', _videoFile.path);
-      request.files.add(videoFile);
+    // Add video files
+    if (_videoFiles.isNotEmpty) {
+      for (var videoFile in _videoFiles) {
+        var video =
+            await http.MultipartFile.fromPath('videos[]', videoFile.path);
+        request.files.add(video);
+      }
     }
 
     // Send the request
@@ -62,8 +68,8 @@ class _TeacherCourseCreationScreenState
         // Reset the form and navigate to the course list
         _titleController.clear();
         _descriptionController.clear();
-      _thumbnailImage = File('');
-      _videoFile = File('');
+        _thumbnailImage = File('');
+        _videoFiles.clear();
 
         setState(() {
           _isUploading = false;
@@ -125,23 +131,30 @@ class _TeacherCourseCreationScreenState
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: source);
+    final picker = FilePicker.platform;
+    FilePickerResult? result = await picker.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
 
-    if (pickedImage != null) {
+    if (result != null && result.files.isNotEmpty) {
       setState(() {
-        _thumbnailImage = File(pickedImage.path);
+        _thumbnailImage = File(result.files.first.path!);
       });
     }
   }
 
-  Future<void> _pickVideo() async {
-    final picker = ImagePicker();
-    final pickedVideo = await picker.pickVideo(source: ImageSource.gallery);
+  Future<void> _pickVideos() async {
+    final picker = FilePicker.platform;
+    FilePickerResult? result = await picker.pickFiles(
+      type: FileType.video,
+      allowMultiple: true,
+    );
 
-    if (pickedVideo != null) {
+    if (result != null && result.files.isNotEmpty) {
+      List<File> videoFiles = result.files.map((file) => File(file.path!)).toList();
       setState(() {
-        _videoFile = File(pickedVideo.path);
+        _videoFiles.addAll(videoFiles);
       });
     }
   }
@@ -162,26 +175,28 @@ class _TeacherCourseCreationScreenState
               const SizedBox(height: 16),
               TextField(
                 controller: _descriptionController,
-                decoration:kInputDecoration('Course Description'),
+                decoration: kInputDecoration('Course Description'),
                 maxLines: null,
               ),
               const SizedBox(height: 16),
               TextButton(
-                 style: myStyle(),
+                style: myStyle(),
                 onPressed: () => _pickImage(ImageSource.gallery),
                 child: const Text('Pick Thumbnail Image'),
               ),
               const SizedBox(height: 16),
               TextButton(
-                 style: myStyle(),
-                onPressed: () => _pickVideo(),
-                child: const Text('Upload Video'),
+                style: myStyle(),
+                onPressed: () => _pickVideos(),
+                child: const Text('Upload Videos'),
               ),
               const SizedBox(height: 16),
               TextButton(
-                 style: myStyle(),
+                style: myStyle(),
                 onPressed: _isUploading ? null : _uploadCourse,
-                child: _isUploading ? const CircularProgressIndicator() : const Text('Create Course'),
+                child: _isUploading
+                    ? const CircularProgressIndicator()
+                    : const Text('Create Course'),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 
 
 
+import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,13 +12,14 @@ class Help extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        backgroundColor: context.theme.backgroundColor,
         leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-          onTap: () => Get.back(),
-        ),
+          onTap: ()=>Get.back(),
+          child: const Icon(Icons.arrow_back_ios_new)),
+          title:  Text('Ask Forum',style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
+          centerTitle: true,
+        
+          foregroundColor: Get.isDarkMode?Colors.white:Colors.black
       ),
     ));
   }

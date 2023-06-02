@@ -140,8 +140,24 @@ class _ForumState extends State<Forum> {
             padding:const  EdgeInsets.symmetric(horizontal: 8),
             child: kTextButton('Ask', (){
               if (_formKey.currentState!.validate()){
+                showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Forum Created Successfully.'),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          ),
+        );
                 setState(() {
                   _loading = !_loading;
+                  
                 });
                 if (widget.forum == null) {
                   _createForum();
@@ -149,6 +165,7 @@ class _ForumState extends State<Forum> {
                   _editForum(widget.forum!.id ?? 0);
                 }
               }
+              _txtControllerBody.text = '';
             }),
           )
         ],
