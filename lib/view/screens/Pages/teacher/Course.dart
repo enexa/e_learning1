@@ -1,13 +1,10 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../widget/constants.dart';
-// 'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx', // Replace with your authorization token
-//       'Accept': 'application/json',
-
 
 class TeacherCourseCreationScreen extends StatefulWidget {
   const TeacherCourseCreationScreen({super.key});
@@ -22,8 +19,9 @@ class _TeacherCourseCreationScreenState
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late File _thumbnailImage;
-  List<File> _videoFiles = [];
+  late File _videoFile;
   bool _isUploading = false;
+  bool isLoading=true;
 
   Future<void> _uploadCourse() async {
     setState(() {
@@ -51,13 +49,11 @@ class _TeacherCourseCreationScreenState
       request.files.add(thumbnailImage);
     }
 
-    // Add video files
-    if (_videoFiles.isNotEmpty) {
-      for (var videoFile in _videoFiles) {
-        var video =
-            await http.MultipartFile.fromPath('videos[]', videoFile.path);
-        request.files.add(video);
-      }
+    // Add video file
+    if (_videoFile != null) {
+      var videoFile =
+          await http.MultipartFile.fromPath('video', _videoFile.path);
+      request.files.add(videoFile);
     }
 
     // Send the request
@@ -68,8 +64,8 @@ class _TeacherCourseCreationScreenState
         // Reset the form and navigate to the course list
         _titleController.clear();
         _descriptionController.clear();
-        _thumbnailImage = File('');
-        _videoFiles.clear();
+      _thumbnailImage = File('');
+      _videoFile = File('');
 
         setState(() {
           _isUploading = false;
@@ -131,38 +127,71 @@ class _TeacherCourseCreationScreenState
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final picker = FilePicker.platform;
-    FilePickerResult? result = await picker.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: source);
 
-    if (result != null && result.files.isNotEmpty) {
+    if (pickedImage != null) {
       setState(() {
-        _thumbnailImage = File(result.files.first.path!);
+        _thumbnailImage = File(pickedImage.path);
       });
     }
   }
 
-  Future<void> _pickVideos() async {
-    final picker = FilePicker.platform;
-    FilePickerResult? result = await picker.pickFiles(
-      type: FileType.video,
-      allowMultiple: true,
-    );
+  Future<void> _pickVideo() async {
+    final picker = ImagePicker();
+    final pickedVideo = await picker.pickVideo(source: ImageSource.gallery);
 
-    if (result != null && result.files.isNotEmpty) {
-      List<File> videoFiles = result.files.map((file) => File(file.path!)).toList();
+    if (pickedVideo != null) {
       setState(() {
-        _videoFiles.addAll(videoFiles);
+        _videoFile = File(pickedVideo.path);
       });
     }
+  }
+  Widget buildShimmeringContainer(double height, double width) {
+    return Shimmer.fromColors(
+
+          period: const Duration(milliseconds: 300),
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: height,
+        width: width,
+        color: Colors.white,
+      ),
+    );
+  }
+   Widget BuildShimmer() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              buildShimmeringContainer(70, 70),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildShimmeringContainer(12, double.infinity),
+                    const SizedBox(height: 5),
+                    buildShimmeringContainer(12, 150),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: isLoading?BuildShimmer():
+      SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -175,28 +204,26 @@ class _TeacherCourseCreationScreenState
               const SizedBox(height: 16),
               TextField(
                 controller: _descriptionController,
-                decoration: kInputDecoration('Course Description'),
+                decoration:kInputDecoration('Course Description'),
                 maxLines: null,
               ),
               const SizedBox(height: 16),
               TextButton(
-                style: myStyle(),
+                 style: myStyle(),
                 onPressed: () => _pickImage(ImageSource.gallery),
                 child: const Text('Pick Thumbnail Image'),
               ),
               const SizedBox(height: 16),
               TextButton(
-                style: myStyle(),
-                onPressed: () => _pickVideos(),
-                child: const Text('Upload Videos'),
+                 style: myStyle(),
+                onPressed: () => _pickVideo(),
+                child: const Text('Upload Video'),
               ),
               const SizedBox(height: 16),
               TextButton(
-                style: myStyle(),
+                 style: myStyle(),
                 onPressed: _isUploading ? null : _uploadCourse,
-                child: _isUploading
-                    ? const CircularProgressIndicator()
-                    : const Text('Create Course'),
+                child: _isUploading ? const CircularProgressIndicator() : const Text('Create Course'),
               ),
             ],
           ),

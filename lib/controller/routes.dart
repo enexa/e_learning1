@@ -24,7 +24,7 @@ import '../view/screens/Pages/teacher/schedule_stream.dart';
 
 final List<Map<String, dynamic>> pageDetails = [
   {
-    'pageName': CourseListPage(),
+    'pageName': const CourseListPage(),
   },
   {
     'pageName':     PdfScreen(),
@@ -36,7 +36,7 @@ final List<Map<String, dynamic>> pageDetails = [
     'pageName': const ForumScreen(),
   },
   {
-    'pageName': const Student_Profile(),
+    'pageName': const StudentProfile(),
   },
     
 ];
@@ -44,9 +44,9 @@ final List<Map<String, dynamic>> navigation = [
   {
     'pageName': const Screen(),
   },
-  {
-    'pageName': const PostForm(),
-  },
+  // {
+  //   'pageName': const PostForm(),
+  // },
   {
     'pageName': const MyStream(),
   },

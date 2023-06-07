@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 
+import '../../colors.dart';
 import '../../widget/constants.dart';
 import '../../../../controller/service/post_service.dart';
 import '../../../../controller/service/use_service.dart';
@@ -114,6 +115,16 @@ class _PostFormState extends State<PostForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: context.theme.backgroundColor,
+        leading: GestureDetector(
+          onTap: ()=>Get.back(),
+          child: const Icon(Icons.arrow_back_ios_new)),
+          title:  Text('Upload Announcements',style: headingstyle(Get.isDarkMode?Colors.white:Colors.black),),
+          centerTitle: true,
+        
+          foregroundColor: Get.isDarkMode?Colors.white:Colors.black
+      ),
       
       body:_loading ? const Center(child: CircularProgressIndicator(),) :  ListView(
         children: [
@@ -167,6 +178,21 @@ class _PostFormState extends State<PostForm> {
             padding:const  EdgeInsets.symmetric(horizontal: 8),
             child: kTextButton('Post', (){
               if (_formKey.currentState!.validate()){
+                 showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Announcement Uploaded Successfully.'),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          ),
+        );
                 setState(() {
                   _loading = !_loading;
                 });

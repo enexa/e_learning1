@@ -1,9 +1,8 @@
-// ignore_for_file: camel_case_types
 
 
 import 'package:e_learning/models/user.dart';
 
-class forums {
+class Forums {
   int? id;
   String? body;
   String? image;
@@ -12,7 +11,7 @@ class forums {
   User? user;
   bool? selfLiked;
 
-  forums({
+  Forums({
     this.id,
     this.body,
     this.image,
@@ -24,8 +23,8 @@ class forums {
 
 // map json to post model
 
-factory forums.fromJson(Map<String, dynamic> json) {
-  return forums(
+factory Forums.fromJson(Map<String, dynamic> json) {
+  return Forums(
     id: json['id'],
     body: json['body'],
     likesCount: json['likes_count'],

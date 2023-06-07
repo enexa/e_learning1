@@ -4,9 +4,11 @@ import 'dart:io';
 
 
 import 'package:e_learning/view/screens/Pages/teacher/passwordchange.dart';
+import 'package:e_learning/view/screens/Pages/teacher/uploadpdf.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 import '../../widget/constants.dart';
@@ -28,6 +30,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   User? user;
   bool loading = true;
+
+  bool isLoading=false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
    File? _imageFile;
   final _picker = ImagePicker();
@@ -95,7 +99,7 @@ class _ProfileState extends State<Profile> {
   
   @override
   Widget build(BuildContext context) {
-    return loading ? const Center(child: CircularProgressIndicator(),) :
+    return loading ? MyShimmer() :
     Padding(
       padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
       child: ListView(
@@ -142,10 +146,74 @@ class _ProfileState extends State<Profile> {
           }),
           kTextButton('change password',(){
             Get.to(const PasswordChange());
+          }),
+          kTextButton('Course Status',(){
+            Get.to(const PasswordChange());
+          }),
+          kTextButton('Upload Pdf',(){
+            Get.to(const PdfUpload());
           })
         
         ],
       ),
     );
   }
+}
+
+class MyShimmer extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
+      child: ListView(
+        children: [
+          Center(
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(60),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

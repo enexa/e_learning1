@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
           navigation[1]['pageName'],
           navigation[2]['pageName'],
           navigation[3]['pageName'],
-           navigation[4]['pageName'],
+          
           
         ],
       ),
@@ -99,9 +99,8 @@ class _HomeState extends State<Home> {
         height: 50.0,
         items:  const <Widget>[
         Icon(Icons.home,size: 20,color:blackclr),
-        Icon(Icons.add_a_photo,size: 20,color:blackclr),
         Icon(Icons.live_tv_rounded,size: 20,color:blackclr),
-        Icon(Icons.picture_as_pdf,size: 20,color:blackclr),
+        Icon(Icons.class_outlined,size: 20,color:blackclr),
          Icon(Icons.person,size: 20,color:blackclr),
        
         
@@ -116,38 +115,3 @@ class _HomeState extends State<Home> {
 }
 
 
-// comment 
-// currentIndex == 0 ? const PostScreen() : const Profile(),
-//         floatingActionButton: FloatingActionButton(
-//           onPressed: (){
-//              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const PostForm(
-//                title: 'Add new post',
-//              )));
-//           },
-//           child:const  Icon(Icons.add),
-//         ),
-//         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-//         bottomNavigationBar: BottomAppBar(
-//           notchMargin: 5,
-//           elevation: 10,
-//           clipBehavior: Clip.antiAlias,
-//           shape: const CircularNotchedRectangle(),
-//           child: BottomNavigationBar(
-//             items: const [
-//               BottomNavigationBarItem(
-//                 icon: Icon(Icons.home),
-//                 label: ''
-//               ),
-//               BottomNavigationBarItem(
-//                 icon: Icon(Icons.person),
-//                 label: ''
-//               )
-//             ],
-//             currentIndex: currentIndex,
-//             onTap: (val) {
-//               setState(() {
-//                 currentIndex = val;
-//               });
-//             },
-//           ),
-//         ),

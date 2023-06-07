@@ -4,6 +4,7 @@ import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../controller/schedule_task.dart';
 import '../../../../models/schedule.dart';
@@ -24,6 +25,7 @@ class _MyStreamState extends State<MyStream> {
   final TaskController _taskController=Get.put(TaskController());
   final TextEditingController _titleController=TextEditingController();
   final TextEditingController _noteController=TextEditingController();  
+ bool isLoading =true;
 
   DateTime _selectedDate=DateTime.now();
   String _endTime="9:30 pm";
@@ -44,13 +46,52 @@ class _MyStreamState extends State<MyStream> {
    
   ];
   int _selectedcolor=0;
+  Widget buildShimmeringContainer(double height, double width) {
+    return Shimmer.fromColors(
+          period: const Duration(milliseconds: 800),
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: height,
+        width: width,
+        color: Colors.white,
+      ),
+    );
+  }
+   Widget BuildShimmer() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              buildShimmeringContainer(70, 70),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildShimmeringContainer(12, double.infinity),
+                    const SizedBox(height: 5),
+                    buildShimmeringContainer(12, 150),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: context.theme.backgroundColor,
      
-        body: Container(
+        body: isLoading?BuildShimmers():
+        Container(
           margin:const  EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
@@ -73,46 +114,7 @@ class _MyStreamState extends State<MyStream> {
                     widget: IconButton(onPressed: (() => _getusertime(isStarttime: false)), icon: Icon(Icons.access_time_filled_rounded,color: Get.isDarkMode?Colors.white:Colors.grey[500],)),))  
                     ],
                   ),
-                  // MyInputField(title: 'Remind', hint: "$_selectedremind minutes early",
-                  // widget: DropdownButton(
-                  //   icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
-                  //   iconSize: 32,
-                  //   elevation: 4,
-                  //   style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
-                  //   underline: Container(height: 0,),
-
-                  //   items: remindList.map<DropdownMenuItem<String>>((int value){
-                  //     return  DropdownMenuItem<String>(
-                  //       value: value.toString(),
-                  //       child: Text(value.toString()));
-                  //   }).toList(),
-                  //    onChanged: (String ?newValue){
-                  //     setState(() {
-                  //       _selectedremind=int.parse(newValue!);
-                  //     });
-                  //    }),),
-                     //starts heere
-                  //       MyInputField(title: 'Repeat', hint: _selectedRepeat,
-                  // widget: DropdownButton(
-                  //   icon: Icon(Icons.keyboard_arrow_down,color: Get.isDarkMode?Colors.white:Colors.grey[500],),
-                  //   iconSize: 32,
-                  //   elevation: 4,
-                  //   style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black),
-                  //   underline: Container(height: 0,),
-
-                  //   items: repeatList.map<DropdownMenuItem<String>>((String ?value){
-                  //     return  DropdownMenuItem<String>(
-                  //       value: value,
-                  //       child: Text(value!,style: TextStyle(
-                  //         color: Get.isDarkMode?Colors.white:Colors.grey
-                  //       ),
-                  //       ),);
-                  //   }).toList(),
-                  //    onChanged: (String ?newValue){
-                  //     setState(() {
-                  //       _selectedRepeat=newValue!;
-                  //     });
-                  //    }),),
+                 
                     const SizedBox(height: 18,),
                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -281,3 +283,47 @@ _getdatefromuser()async{
       _endTime='00:00 AM';
     });
    }}
+   
+   class BuildShimmers extends StatelessWidget{
+     @override
+     Widget build(BuildContext context) {
+     return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              buildShimmeringContainer(70, 70),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildShimmeringContainer(12, double.infinity),
+                    const SizedBox(height: 5),
+                    buildShimmeringContainer(12, 150),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+     }
+     
+      buildShimmeringContainer(double height, double width) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: height,
+        width: width,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  
+   }

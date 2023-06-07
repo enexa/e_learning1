@@ -4,6 +4,7 @@ import 'package:e_learning/view/screens/Pages/student/vedeo_player.dart';
 import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,7 +44,11 @@ class CourseListPage extends StatefulWidget {
 
 class _CourseListPageState extends State<CourseListPage> {
   List<Course> courses = [];
-  
+  bool isLoading = true;
+  bool isSearching = false;
+  List<Course> filteredCourses = [];
+
+
 
   @override
   void initState() {
@@ -82,9 +87,10 @@ class _CourseListPageState extends State<CourseListPage> {
 
       setState(() {
         courses = fetchedCourses;
+        isLoading=false;
       });
     } else {
-      // Handle non-200 status code
+     isLoading=false;
       print('Failed to fetch courses. Status code: ${response.statusCode}');
     }
   } catch (error) {
@@ -92,8 +98,99 @@ class _CourseListPageState extends State<CourseListPage> {
     print('Error fetching courses: $error');
   }
 }
+Widget ShimmerWidgets(){
+  return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 10, right: 0),
+      child: ListView(
+        children: [
+          SizedBox(
+            child: Shimmer.fromColors(
+              period: const Duration(milliseconds: 3000),
 
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: Colors.white,
+                ),
+              width: double.infinity,
+              height: 180,
+             
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white,
+                ),
+              width: double.infinity,
+              height: 90,
+             
+            ),
+          ),
+        
+        ],
+      ),
+    );
+}
+ Widget buildShimmeringContainer(double height, double width) {
+    return Shimmer.fromColors(
+      period:  const Duration(milliseconds: 3000),
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: height,
+        width: width,
+        color: Colors.white,
+      ),
+    );
+  }
 
+  Widget buildShimmeringListView() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              buildShimmeringContainer(70, 70),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildShimmeringContainer(12, double.infinity),
+                    const SizedBox(height: 5),
+                    buildShimmeringContainer(12, 150),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +199,8 @@ class _CourseListPageState extends State<CourseListPage> {
       child: SafeArea(
         child: Scaffold(
            backgroundColor: context.theme.backgroundColor,
-          body: SingleChildScrollView(
+          body: isLoading ? buildShimmeringListView() :
+          SingleChildScrollView(
             child: Stack(
               children: [
                 SingleChildScrollView(
@@ -120,11 +218,18 @@ class _CourseListPageState extends State<CourseListPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                           
-                            validator: (val) =>
-                                val!.isEmpty ? 'Invalid email address' : null,
-                            decoration: kInputDecoration('Search Courses')),
+                         keyboardType: TextInputType.emailAddress,
+                          onChanged: (value) {
+                        setState(() {
+                          isSearching = value.isNotEmpty;
+                          filteredCourses = courses.where((course) =>
+                        course.title.toLowerCase().contains(value.toLowerCase())).toList();
+                         });
+                                   },
+                               validator: (val) => val!.isEmpty ? 'Invalid email address' : null,
+                              decoration: kInputDecoration('Search Courses'),
+                              ),
+
                         ),
                        
                       
@@ -142,71 +247,74 @@ class _CourseListPageState extends State<CourseListPage> {
                         
                          
                             child: ListView.builder(
-                              itemCount: courses.length,
+                              
+                             itemCount: isSearching ? filteredCourses.length : courses.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                final course = courses[index];
+                               final course = isSearching ? filteredCourses[index] : courses[index];
                                 return Padding(
                                   padding: const EdgeInsets.all(7.0),
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(vertical: 5),
                                     height: 180,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return VideoPage(
-                                                videos: course.video,
-                                                title: course.title,
-                                                 description: course.description,
-                                                 thumbnail: course.thumbnail,
-                                              );
-                                            },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            blurRadius: 2,
+                                            offset: const Offset(0, 2),
                                           ),
-                                        );
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.5),
-                                              blurRadius: 2,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                image: DecorationImage(
-                                                  image: NetworkImage(course.thumbnail),
-                                                  fit: BoxFit.cover,
-                                                ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              image: DecorationImage(
+                                                image: NetworkImage(course.thumbnail),
+                                                fit: BoxFit.cover,
                                               ),
-                                              height: 180,
-                                              width: 180,
                                             ),
-                                            const SizedBox(height: 10),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  course.title,
-                                                  style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black)
-                                                ),
-                                              ],
-                                            ),
-                                      
-                                           
-                                          ],
+                                            height: 180,
+                                            width: 180,
+                                          ),
+                                         
+                                          Row(
+                                            children: [
+                                               Text(
+                                                course.title,
+                                                style: subtitlestyle(blackclr)
+                                              ),
+                                               SizedBox(width: 12,),
+                                              kTextButton('enroll', () {
+                                                 Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return VideoPage(
+                                              videos: course.video,
+                                              title: course.title,
+                                               description: course.description,
+                                               thumbnail: course.thumbnail,
+                                            );
+                                          },
                                         ),
+                                      );
+                     
+                                             }),
+                                            
+                                             
+                                            ],
+                                          ),
+                                    
+                                         
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -279,7 +387,7 @@ class _CourseListPageState extends State<CourseListPage> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(6.0),
-                                            child: Text(course.title,style: subtitlestyle(Get.isDarkMode?Colors.white:Colors.black)),
+                                            child: Text(course.title,style: subtitlestyle(blackclr)),
                                           ),
                                         
                                          
@@ -307,6 +415,63 @@ class _CourseListPageState extends State<CourseListPage> {
   }
 }
 
+class ShimmerWidget extends StatelessWidget{
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 10, right: 0),
+      child: ListView(
+        children: [
+          SizedBox(
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: Colors.white,
+                ),
+              width: double.infinity,
+              height: 180,
+             
+            ),
+          ),
+          const SizedBox(height: 20),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white,
+                ),
+              width: double.infinity,
+              height: 90,
+             
+            ),
+          ),
+        
+        ],
+      ),
+    );
+  }
+}
 
 
 

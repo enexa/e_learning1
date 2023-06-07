@@ -19,7 +19,7 @@ import '../student/login.dart';
 
 
 class Forum extends StatefulWidget {
-  final forums? forum;
+  final Forums? forum;
   final String? title;
 
   const Forum({super.key, 

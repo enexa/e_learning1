@@ -4,6 +4,7 @@
 import 'package:e_learning/view/screens/Pages/teacher/post.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 
@@ -118,130 +119,191 @@ class _PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading ? const Center(child:CircularProgressIndicator()) :
-    RefreshIndicator(
-      onRefresh: () {
-        return retrievePosts();
-      },
-      child: ListView.builder(
-        itemCount: _postList.length,
-        itemBuilder: (BuildContext context, int index){
-          announcements post = _postList[index];
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return _loading ? 
+    ListView.builder(
+            itemCount: 5, // Display shimmer effect for 5 items
+            itemBuilder: (context, index) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 10.0,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(height: 8.0),
+                      Container(
+                        width: double.infinity,
+                        height: 30.0,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(height: 8.0),
+                      Container(
+                        width: double.infinity,
+                        height: 80.0,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+    :
+    Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: () {
+            return retrievePosts();
+          },
+          child: ListView.builder(
+            itemCount: _postList.length,
+            itemBuilder: (BuildContext context, int index){
+              announcements post = _postList[index];
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              image: post.user!.image != null ?
-                                DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.amber
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  image: post.user!.image != null ?
+                                    DecorationImage(image: NetworkImage('${post.user!.image}')) : null,
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.amber
+                                ),
+                              ),
+                              const SizedBox(width: 10,),
+                              Text(
+                                '${post.user!.name}',
+                                style:const  TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17
+                                ),
+                              )
+                            ],
                           ),
-                          const SizedBox(width: 10,),
-                          Text(
-                            '${post.user!.name}',
-                            style:const  TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    post.user!.id == userId ?
-                    PopupMenuButton(
-                      child: const Padding(
-                        padding: EdgeInsets.only(right:10),
-                        child: Icon(Icons.more_vert, color: Colors.black,)
-                      ),
-                      itemBuilder: (context) => [
-                       const PopupMenuItem(
-                          value: 'edit',
-                          child:  Text('Edit')
                         ),
-                       const PopupMenuItem(
-                          value: 'delete',
-                          child: Text('Delete')
-                        )
+                        post.user!.id == userId ?
+                        PopupMenuButton(
+                          child: const Padding(
+                            padding: EdgeInsets.only(right:10),
+                            child: Icon(Icons.more_vert, color: Colors.black,)
+                          ),
+                          itemBuilder: (context) => [
+                           const PopupMenuItem(
+                              value: 'edit',
+                              child:  Text('Edit')
+                            ),
+                           const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete')
+                            )
+                          ],
+                          onSelected: (val){
+                            if(val == 'edit'){
+                              Get.to(PostForm(post: post,title:'Edit Post' ,));
+                              //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
+                              //    title: 'Edsit Post',
+                              //    post: post,
+                              //  )));
+                            } else {
+                              _handleDeletePost(post.id ?? 0);
+                            }
+                          },
+                        ) :const  SizedBox()
                       ],
-                      onSelected: (val){
-                        if(val == 'edit'){
-                          Get.to(PostForm(post: post,title:'Edit Post' ,));
-                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostForm(
-                          //    title: 'Edsit Post',
-                          //    post: post,
-                          //  )));
-                        } else {
-                          _handleDeletePost(post.id ?? 0);
-                        }
-                      },
-                    ) :const  SizedBox()
+                    ),
+                    const SizedBox(height: 12,),
+                    Text('${post.body}'),
+                    post.image != null ?
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 180,
+                      margin:const  EdgeInsets.only(top: 5),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage('${post.image}'),
+                          fit: BoxFit.cover
+                        )
+                      ),
+                    ) : SizedBox(height: post.image != null ? 0 : 10,),
+                    // Row(
+                    //   children: [
+                    //     kLikeAndComment(
+                    //       post.likesCount ?? 0,
+                    //       post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
+                    //       post.selfLiked == true ? Colors.red : Colors.black54,
+                    //       (){
+                    //         _handlePostLikeDislike(post.id ?? 0);
+                    //       }
+                    //     ),
+                    //     Container(
+                    //       height: 25,
+                    //       width: 0.5,
+                    //       color: Colors.black38,
+                    //     ),
+                    //     kLikeAndComment(
+                    //       post.commentsCount ?? 0,
+                    //       Icons.sms_outlined,
+                    //       Colors.black54,
+                    //       (){
+                    //         Get.to(CommentScreen(postId: post.id));
+                    //         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
+                    //         //   postId: post.id,
+                    //         // )));
+                    //       }
+                    //     ),
+                    //   ],
+                    // ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 0.5,
+                      color: Colors.black26,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 12,),
-                Text('${post.body}'),
-                post.image != null ?
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 180,
-                  margin:const  EdgeInsets.only(top: 5),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage('${post.image}'),
-                      fit: BoxFit.cover
-                    )
+              );
+            }
+          ),
+        ),
+         Positioned(
+                bottom: 16,
+                left: 2,
+                right: 2,
+                child: TextButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Colors.blue),
+                      ),
+                    ),
                   ),
-                ) : SizedBox(height: post.image != null ? 0 : 10,),
-                // Row(
-                //   children: [
-                //     kLikeAndComment(
-                //       post.likesCount ?? 0,
-                //       post.selfLiked == true ? Icons.favorite : Icons.favorite_outline,
-                //       post.selfLiked == true ? Colors.red : Colors.black54,
-                //       (){
-                //         _handlePostLikeDislike(post.id ?? 0);
-                //       }
-                //     ),
-                //     Container(
-                //       height: 25,
-                //       width: 0.5,
-                //       color: Colors.black38,
-                //     ),
-                //     kLikeAndComment(
-                //       post.commentsCount ?? 0,
-                //       Icons.sms_outlined,
-                //       Colors.black54,
-                //       (){
-                //         Get.to(CommentScreen(postId: post.id));
-                //         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CommentScreen(
-                //         //   postId: post.id,
-                //         // )));
-                //       }
-                //     ),
-                //   ],
-                // ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 0.5,
-                  color: Colors.black26,
+                  onPressed: () =>
+                      Get.to(const PostForm()),
+                  child: const Text(
+                    'Upload Announcements',
+                    style: TextStyle(fontSize: 15),
+                  ),
                 ),
-              ],
-            ),
-          );
-        }
-      ),
+              ),
+      ],
     );
   }
 }

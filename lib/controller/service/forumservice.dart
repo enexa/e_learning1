@@ -24,7 +24,7 @@ Future<ApiResponse> getForums() async {
 
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['forums'].map((p) => forums.fromJson(p)).toList();
+        apiResponse.data = jsonDecode(response.body)['forums'].map((p) => Forums.fromJson(p)).toList();
         apiResponse.data as List<dynamic>;
         break;
       case 401:

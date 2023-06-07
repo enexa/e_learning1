@@ -37,13 +37,18 @@ Future<void> _uploadPDFFile() async {
   final String fileName = _filePickerResult!.files.single.name;
   final Uint8List bytes = _filePickerResult!.files.single.bytes!;
 
-  final http.MultipartRequest request = http.MultipartRequest(
-    'POST',
-    Uri.parse('http://10.42.0.1:8000/api/pdfupload'),
-  )
-    ..fields['category'] = category
-    ..fields['year'] = year
-    ..files.add(http.MultipartFile.fromBytes(
+
+    const url = 'http://192.168.0.15:8000/api/pdfupload'; 
+    final headers = {
+      'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx', 
+      'Accept': 'application/json', 
+    };
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers.addAll(headers);
+    request.fields['category'] = category;
+    request.fields['year'] = year;
+    request.files.add(http.MultipartFile.fromBytes(
       'pdf_file',
       bytes,
       filename: fileName,
@@ -52,9 +57,10 @@ Future<void> _uploadPDFFile() async {
   final http.StreamedResponse response = await request.send();
 
   if (response.statusCode == 200) {
-    // Display a success message
+   
+    
   } else {
-    // Display an error message
+   
   }
 }
 
