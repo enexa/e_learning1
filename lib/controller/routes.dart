@@ -48,7 +48,7 @@ final List<Map<String, dynamic>> navigation = [
   //   'pageName': const PostForm(),
   // },
   {
-    'pageName': const MyStream(),
+    'pageName': const ScheduleScreen(),
   },
   {
     'pageName':  const TeacherCourseCreationScreen(),

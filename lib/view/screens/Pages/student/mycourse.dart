@@ -47,6 +47,7 @@ class _CourseListPageState extends State<CourseListPage> {
   bool isLoading = true;
   bool isSearching = false;
   List<Course> filteredCourses = [];
+  bool isEnrolled = false;
 
 
 
@@ -55,6 +56,27 @@ class _CourseListPageState extends State<CourseListPage> {
     super.initState();
     fetchData();
   }
+Future<void> enrollInCourse(String courseTitle) async {
+  final url = 'http://192.168.0.15:8000/api/courses/$courseTitle/enroll';
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+       'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    setState(() {
+      isEnrolled = true;
+    });
+    print('Enrollment successful');
+  } else {
+    print('Enrollment failed with status code: ${response.statusCode}');
+    print('Error message: ${response.body}');
+  }
+}
 
   Future<void> fetchData() async {
   final url = Uri.parse('http://192.168.0.15:8000/api/courses');
@@ -292,7 +314,8 @@ Widget ShimmerWidgets(){
                                                 style: subtitlestyle(blackclr)
                                               ),
                                                SizedBox(width: 12,),
-                                              kTextButton('enroll', () {
+                                              kTextButton((isEnrolled ? 'Learn' : 'Enroll'), () {
+                                                enrollInCourse(course.title);
                                                  Navigator.push(
                                         context,
                                         MaterialPageRoute(
