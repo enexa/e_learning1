@@ -179,22 +179,22 @@ class _ForumScreenState extends State<ForumScreen> {
                                     const EdgeInsets.symmetric(horizontal: 6),
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        image: post.user!.image != null
-                                            ? DecorationImage(
-                                                image: NetworkImage(
-                                                    '${post.user!.image}'),
-                                                fit: BoxFit.cover)
-                                            : null,
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Colors.blueGrey,
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   width: 30,
+                                    //   height: 30,
+                                    //   decoration: BoxDecoration(
+                                    //     image: post.user!.image != null
+                                    //         ? DecorationImage(
+                                    //             image: NetworkImage(
+                                    //                 '${post.user!.image}'),
+                                    //             fit: BoxFit.cover)
+                                    //         : null,
+                                    //     borderRadius: BorderRadius.circular(15),
+                                    //     color: Colors.blueGrey,
+                                    //   ),
+                                    // ),
                                     const SizedBox(
-                                      width: 10,
+                                      width: 5,
                                     ),
                                     Text(
                                       '${post.user!.name}',

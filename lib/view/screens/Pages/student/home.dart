@@ -21,7 +21,7 @@ import '../../../../models/user.dart';
 import '../../colors.dart';
 import '../../widget/constants.dart';
 import 'alert.dart';
-import 'help.dart';
+
 import 'login.dart';
 class Homewillbe extends StatefulWidget {
   const Homewillbe({super.key});
@@ -137,7 +137,7 @@ class _HomewillbeState extends State<Homewillbe> {
          
           actions: [
             GestureDetector(
-              onTap: () => Get.to( const MyNotification()),
+              onTap: () => Get.to(  const ScheduleListScreen()),
               child:  Stack(
                 children: [
                   Container(
@@ -313,23 +313,7 @@ color: Colors.red,
     
                 ),
                
-                ListTile(
-                  title: const Text('help'),
-                  leading:  Icon(
-                    Icons.help,
-                     color:Get.isDarkMode?Colors.white:Colors.black,
-                  ),
-                  onTap: ()=>Get.to(const Help()),
-                  trailing:  Icon(
-                    Icons.arrow_right,
-                     color:Get.isDarkMode?Colors.white:Colors.black,
-                  ),
-                ),
-                 const Divider(
-                  height: 2,
-                  color: Colors.grey,
-    
-                ),
+               
                 ListTile(
                   title:  Text(Get.isDarkMode?'Light Mode':'Dark Mode'),
                   leading: Icon(

@@ -4,6 +4,7 @@ import 'dart:io';
 
 
 import 'package:e_learning/view/screens/Pages/teacher/passwordchange.dart';
+import 'package:e_learning/view/screens/Pages/teacher/students.dart';
 import 'package:e_learning/view/screens/Pages/teacher/uploadpdf.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -148,7 +149,7 @@ class _ProfileState extends State<Profile> {
             Get.to(const PasswordChange());
           }),
           kTextButton('Course Status',(){
-            Get.to(const PasswordChange());
+            Get.to(const  EnrolledStudentsPage());
           }),
           kTextButton('Upload Pdf',(){
             Get.to(const PdfUpload());

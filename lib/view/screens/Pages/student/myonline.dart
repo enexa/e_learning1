@@ -1,49 +1,39 @@
-// ignore_for_file: library_prefixes, unused_label, list_remove_unrelated_type
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-
-import 'package:agora_rtm/agora_rtm.dart';
-import 'package:agora_uikit/agora_uikit.dart';
-import 'package:e_learning/models/user.dart';
-
+import 'package:e_learning/view/screens/colors.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:async';
 import '../../widget/constants.dart';
 
-class MyClass extends StatefulWidget {
-
-  final String? channelname;
-  final String? username;
-  final int uid;
-   const MyClass({super.key, this.channelname, this.username, required this.uid});
+class LiveStream extends StatefulWidget {
+  const LiveStream({Key? key}) : super(key: key);
 
   @override
-  State<MyClass> createState() => _MyClassState();
+  State<LiveStream> createState() => _LiveStreamState();
 }
 
-class _MyClassState extends State<MyClass> {
-  late RtcEngine _engine; 
-    List<AgoraUser?> users = [];
-  AgoraClient?_client;
-  AgoraRtmChannel? _channel;
-  bool muted = false;
-  bool vedeoDisabled = false;
+class _LiveStreamState extends State<LiveStream> {
+  int? _remoteUid;
+  bool _localUserJoined = false;
+  late RtcEngine _engine;
+  bool  muted=false;
+  bool vedeoDisabled=false;
   @override
   void initState() {
-    
     super.initState();
-    initialize();
+    initAgora();
   }
-  @override
   void dispose() {
 
     _engine.leaveChannel();
-    users.clear() ;
+  
     super.dispose();
   }
-  Future<void>  initialize() async{
- await [Permission.microphone, Permission.camera].request();
+
+  Future<void> initAgora() async {
+    // retrieve permissions
+    await [Permission.microphone, Permission.camera].request();
 
     //create the engine
     _engine = createAgoraRtcEngine();
@@ -54,85 +44,107 @@ class _MyClassState extends State<MyClass> {
 
     _engine.registerEventHandler(
       RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed, ) {
-          
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("local user ${connection.localUid} joined");
           setState(() {
-       
-            // ignore: non_constant_identifier_names, prefer_typing_uninitialized_variables
-            var Uid;
-            users.add(AgoraUser(uid:Uid));
+            _localUserJoined = true;
           });
         },
-      ));
-  
-    
-        onConnectionStateChanged:(connection, state, reason) {
-          debugPrint('[onConnectionStateChanged] connection: ${connection.toJson()}, state: $state, reason: $reason');
-        if(state == ConnectionStateType.connectionStateDisconnected){
-      _channel?.leave();
-      _client?.release();
-        }
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          debugPrint("remote user $remoteUid joined");
+          setState(() {
+            _remoteUid = remoteUid;
+            
+          });
+        },
+        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+          debugPrint("remote user $remoteUid left channel");
+          setState(() {
+            _remoteUid = null;
+          });
+        },
+        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+          debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        },
+      ),
+    );
 
-    
-        };
-    _channel?.onMemberJoined=(AgoraRtmMember member) {
-      debugPrint('[onMemberJoined] member: ${member.toJson()}');
-      setState(() {
-        // users.add(member.userId);
-      });
-    
-    };
-    _channel?.onMemberLeft=(AgoraRtmMember member) {
-      debugPrint('[onMemberLeft] member: ${member.toJson()}');
-      setState(() {
-        users.remove(member.userId);
-      });
-    };
-    _channel?.onMessageReceived=(AgoraRtmMessage message, AgoraRtmMember member) {
-      debugPrint('[onMessageReceived] message: ${message.toJson()}, member: ${member.toJson()}');
-    };
-      
-   await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await _engine.enableVideo();
     await _engine.startPreview();
-    await _engine.joinChannel(channelId: '', options:const  ChannelMediaOptions(autoSubscribeAudio: true, autoSubscribeVideo: true), token: '', uid: widget.uid);
-   await _channel?.join(); 
 
-  }
-     
-       
-     
-
-  
- 
-
-  @override
-  Widget build(BuildContext context) {
-   return  Scaffold(
- body: Stack(
-  children: [
-    _broadcastview(),
-    _toolbars(),
-
-  ],
- ),
+    await _engine.joinChannel(
+      token: token,
+      channelId: channel,
+      uid: 0,
+      options: const ChannelMediaOptions(),
     );
   }
-  
- Widget _broadcastview() {
-  if(users.isEmpty){
-    return const Center(child: CircularProgressIndicator(),);
+
+  // Create UI with local view and remote view
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: context.theme.backgroundColor,
+      appBar: AppBar(
+         backgroundColor: context.theme.backgroundColor,
+        leading: GestureDetector(
+          onTap: () => Get.back(),
+          child:  Icon(Icons.arrow_back_ios_new,color: Get.isDarkMode?Colors.white:Colors.black,),
+        ),
+        title:  Text('BDU Live Class',style:headingstyle(Get.isDarkMode?Colors.white:Colors.black)),
+      ),
+      body: Stack(
+        children: [
+          Center(
+            child: _remoteVideo(),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 100,
+              height: 150,
+              child: Center(
+                child: _localUserJoined
+                    ? AgoraVideoView(
+                        controller: VideoViewController(
+                          rtcEngine: _engine,
+                          canvas: const VideoCanvas(uid: 0),
+                        ),
+                      )
+                    : const CircularProgressIndicator(),
+              ),
+            ),
+          ),
+          Positioned(
+                bottom: 16,
+                left: 2,
+                right: 2,
+                child: _toolbars(),
+              ),
+        ],
+      ),
+    );
   }
-  return Expanded(child: AgoraVideoView(
-                      controller: VideoViewController(
-                        rtcEngine: _engine,
-                        canvas: const VideoCanvas(uid: 0),
-                      ),
-                    ));
- }
- 
- Widget _toolbars() {
+
+  // Display remote user's video
+  Widget _remoteVideo() {
+    if (_remoteUid != null) {
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: _engine,
+          canvas: VideoCanvas(uid: _remoteUid),
+          connection: const RtcConnection(channelId: channel),
+        ),
+      );
+    } else {
+      return const Text(
+        'Please wait for remote user to join',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+  Widget _toolbars() {
   return Align(
     alignment: Alignment.bottomCenter,
     child: Container(
@@ -155,12 +167,7 @@ class _MyClassState extends State<MyClass> {
 
       
           // ignore: sort_child_properties_last
-          RawMaterialButton(onPressed: _onendcall, child:  Icon(vedeoDisabled?Icons.videocam_off:Icons.videocam, color:    
-          vedeoDisabled?Colors.white:Colors.blue
-          ),shape: const CircleBorder(),
-            elevation:20.0 ,
-            fillColor: Colors.blue,
-            padding: const EdgeInsets.all(15.0),),
+         
           RawMaterialButton(onPressed: _onswitchcamera,shape: const CircleBorder(),
             elevation:20.0 ,
             fillColor: Colors.blue,
@@ -174,7 +181,9 @@ class _MyClassState extends State<MyClass> {
  }
   
    
-  
+  _onendcall() {
+   Get.back();
+  }
 
   _ontogglemute() {
     setState(() {
@@ -185,6 +194,7 @@ class _MyClassState extends State<MyClass> {
 
   
    _ontogglevedeodisable() {
+    Get.back();
     setState(() {
       vedeoDisabled = !vedeoDisabled;
     });
@@ -193,9 +203,4 @@ class _MyClassState extends State<MyClass> {
   
    _onswitchcamera() {
     _engine.switchCamera();
-  }
-  
-   _onendcall() {
-    Navigator.pop(context);
-  }
-  }
+}}

@@ -2,7 +2,12 @@
  import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
+import '../../widget/constants.dart';
+import '../student/myonline.dart';
+import 'package:uuid/uuid.dart';
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
 
@@ -35,7 +40,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer YOUR_AUTH_TOKEN',
+        'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx',
       },
       body: jsonEncode({
         'description': descriptionController.text,
@@ -100,9 +105,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Schedule Screen'),
-      ),
+     
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -124,25 +127,84 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             TextField(
               controller: descriptionController,
-              decoration: const InputDecoration(
-                hintText: 'Enter schedule description',
-              ),
+             
+               decoration: kInputDecoration('Enter schedule description'),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: const Text('Select Date'),
-            ),
+           
+             TextButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  onPressed: () =>_selectDate(context),
+                  child: const Text(
+                    'Select Date',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
             const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () => _selectTime(context),
-              child: const Text('Select Time'),
-            ),
+          
+             TextButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  onPressed: () =>_selectTime(context),
+                  child: const Text(
+                    'Select Time',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: createSchedule,
-              child: const Text('Create Schedule'),
-            ),
+        
+             Row(
+               children: [
+                 TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: const BorderSide(color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      onPressed: () =>createSchedule(),
+                      child: const Text(
+                        'Create Schedule',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  const  SizedBox(width: 30,),
+                     TextButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                   
+  Get.to(const LiveStream());
+                  },
+                  child: const Text(
+                    'Start LiveStream',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+               ],
+             ),
+                
           ],
         ),
       ),

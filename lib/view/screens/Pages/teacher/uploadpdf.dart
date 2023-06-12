@@ -1,7 +1,6 @@
 
 
 import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/files.dart';
@@ -73,6 +72,7 @@ Widget build(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           DropdownButton<String>(
+        
             value: _selectedCategory,
             hint: Text('Select a category'),
             onChanged: (String? newValue) {
@@ -119,6 +119,7 @@ Widget build(BuildContext context) {
           ElevatedButton(
             onPressed: _uploadPDFFile,
             child: Text('Upload PDF file'),
+
           ),
         ],
       ),

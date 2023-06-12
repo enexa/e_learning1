@@ -9,9 +9,13 @@ import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../../../controller/service/use_service.dart';
+import '../../../../models/api_response.dart';
 import '../../../../models/user.dart';
+import '../../../../models/username.dart';
 import '../../widget/constants.dart';
 import 'alert.dart';
+import 'login.dart';
 
 class Course {
   final String id;
@@ -48,36 +52,72 @@ class _CourseListPageState extends State<CourseListPage> {
   bool isSearching = false;
   List<Course> filteredCourses = [];
   bool isEnrolled = false;
-
+   late MyUser user;
 
 
   @override
   void initState() {
     super.initState();
     fetchData();
+     isEnrolled = false;
+    
   }
 Future<void> enrollInCourse(String courseTitle) async {
-  final url = 'http://192.168.0.15:8000/api/courses/$courseTitle/enroll';
+  try {
+    // Get user data
+    final user = await getUserData();
 
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {
-      'Content-Type': 'application/json',
-       'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx',
-    },
-  );
+    // Check if user is null or throw an error if needed
+    if (user == null) {
+      throw somethingWentWrong;
+    }
 
-  if (response.statusCode == 200) {
-    setState(() {
-      isEnrolled = true;
-    });
-    print('Enrollment successful');
-  } else {
-    print('Enrollment failed with status code: ${response.statusCode}');
-    print('Error message: ${response.body}');
+    // Perform the enrollment
+    final url = 'http://192.168.0.15:8000/api/courses/$courseTitle/enroll';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 1|W8DIFtBJYZP9kFKcNbnLhEhrHiYSESxtsX5IFodx',
+      },
+      body: json.encode({'userId': user.id}),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        isEnrolled = true;
+      });
+      print('Enrollment successful');
+    } else {
+      print('Enrollment failed with status code: ${response.statusCode}');
+      print('Error message: ${response.body}');
+    }
+  } catch (e) {
+    print('Error: $e');
   }
 }
 
+
+
+ getUser() async {
+    ApiResponse response = await getUserDetail();
+    if (response.error == null) {
+      setState(() {
+        user = response.data as MyUser;
+        
+      });
+    } else if (response.error == unauthorized) {
+      logout().then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Login()),
+          (route) => false,
+        );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
   Future<void> fetchData() async {
   final url = Uri.parse('http://192.168.0.15:8000/api/courses');
   final headers = {
@@ -315,7 +355,10 @@ Widget ShimmerWidgets(){
                                               ),
                                                SizedBox(width: 12,),
                                               kTextButton((isEnrolled ? 'Learn' : 'Enroll'), () {
-                                                enrollInCourse(course.title);
+                                               setState(() {
+                                             enrollInCourse( course.title);
+                                                  });
+                                                
                                                  Navigator.push(
                                         context,
                                         MaterialPageRoute(

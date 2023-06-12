@@ -59,7 +59,9 @@ ButtonStyle myStyle(){
                       )
                     );
 }
-const appId="52e41f55a5d14274a6b80f1d982bf3b4";
+const token="007eJxTYChJXrR+i+jcuuTUh7IP8n6depkyTY0hqeWLttEW/UdVDLcVGCxMzAzMzYzSjFMMLEwski0sTJLNjVKNE1MMTFOTkkwsX2a1pzQEMjLIRZxnZmSAQBCfm8G30jUnNbEoLzMvnYEBAGA5IoA=";
+const channel="MyElearning";
+const appId="8460762f3d0848c884c72e3ad05ebb49";
 const baseURL = 'http://192.168.0.15:8000/api';
 const loginURL = '$baseURL/login';
 const teacherloginURL = '$baseURL/teacher-login';

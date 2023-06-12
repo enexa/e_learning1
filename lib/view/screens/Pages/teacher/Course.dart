@@ -190,8 +190,7 @@ class _TeacherCourseCreationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading?BuildShimmer():
-      SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

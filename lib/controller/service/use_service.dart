@@ -7,7 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/api_response.dart';
+import '../../models/response.dart';
 import '../../models/user.dart';
+import '../../models/username.dart';
 
 // login
 Future<ApiResponse> login(String email, String password,String department) async {
@@ -102,6 +104,32 @@ Future<ApiResponse> register(String name, String email, String password,String d
   }
   return apiResponse;
 }
+Future<MyUser> getUserData() async {
+  try {
+    String token = await getToken();
+    final response = await http.get(Uri.parse(userURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+
+    if (response.statusCode == 200) {
+      final apiResponse = Response.fromJson(jsonDecode(response.body));
+      if (apiResponse.data != null && apiResponse.data is Map<String, dynamic>) {
+        return MyUser.fromJson(apiResponse.data as Map<String, dynamic>);
+      } else {
+        throw somethingWentWrong;
+      }
+    } else if (response.statusCode == 401) {
+      throw unauthorized;
+    } else {
+      throw somethingWentWrong;
+    }
+  } catch (e) {
+    throw serverError;
+  }
+}
+
+
 
 // User
 Future<ApiResponse> getUserDetail() async {
